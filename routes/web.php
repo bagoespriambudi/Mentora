@@ -14,10 +14,11 @@ Route::get('/', function () {
 // Authentication Routes
 require __DIR__ . '/auth.php';
 
-// Authenticated User Routes
+// Basic authenticated route
 Route::middleware('auth')->group(function () {
-    // Dashboard route
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
     
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
