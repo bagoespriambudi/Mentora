@@ -11,7 +11,6 @@ class FileUploadService
     public function uploadImage(UploadedFile $file, string $path): string
     {
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-
         return $file->storeAs("public/$path", $filename);
     }
 }
