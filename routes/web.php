@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ContentController;
 
 // Guest landing page
 Route::get('/', function () {
@@ -31,3 +32,6 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':admin'
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show', 'create', 'store']);
 });
+
+//Content Routes
+Route::get('/help', [ContentController::class, 'index'])->name('help');
