@@ -1,4 +1,6 @@
 <?php
+
+
 if (!auth()->check() || (auth()->check() && (auth()->user()->role === 'tutee' || auth()->user()->role === 'tutor'))) {
     $navigation['Browse Tutors'] = route('tutors.index');
     $navigation['Articles & Tips'] = route('articles.index');
