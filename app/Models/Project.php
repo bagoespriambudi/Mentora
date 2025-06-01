@@ -19,7 +19,9 @@ class Project extends Model
         'amount',
         'start_date',
         'end_date',
-        'requirements'
+        'requirements',
+        'transaction_proof',
+        'completion_proof'
     ];
 
     protected $casts = [
@@ -43,8 +45,8 @@ class Project extends Model
         return $this->belongsTo(Service::class);
     }
 
-    public function reviews(): HasMany
+    public function review()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasOne(Review::class);
     }
 }
