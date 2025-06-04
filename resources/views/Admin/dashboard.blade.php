@@ -19,7 +19,7 @@
 
                     <div class="mt-8">
                         <h2 class="text-xl font-semibold mb-4">Quick Stats</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <h3 class="font-medium text-gray-900">Total Users</h3>
                                 <p class="text-2xl font-bold text-blue-600">{{ \App\Models\User::count() }}</p>
@@ -27,6 +27,20 @@
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <h3 class="font-medium text-gray-900">Active Users</h3>
                                 <p class="text-2xl font-bold text-green-600">{{ \App\Models\User::where('is_active', true)->count() }}</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-gray-900">New Users (7d)</h3>
+                                <p class="text-2xl font-bold text-indigo-600">{{ \App\Models\User::where('created_at', '>=', now()->subDays(7))->count() }}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-gray-900">Total Tutors</h3>
+                                <p class="text-2xl font-bold text-purple-700">{{ \App\Models\User::where('role', 'tutor')->count() }}</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-gray-900">Total Tutees</h3>
+                                <p class="text-2xl font-bold text-yellow-600">{{ \App\Models\User::where('role', 'tutee')->count() }}</p>
                             </div>
                         </div>
                     </div>

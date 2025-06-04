@@ -1,0 +1,78 @@
+<aside class="w-64 h-screen bg-gradient-to-b from-red-900 to-blue-900 border-r border-red-700/50 flex flex-col fixed top-0 left-0 z-30 shadow-2xl">
+    <!-- Logo Section -->
+    <div class="flex items-center justify-center h-20 border-b border-red-700/50 bg-red-800/50">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span class="text-white text-xl font-bold">M</span>
+            </div>
+            <span class="text-2xl font-bold bg-gradient-to-r from-red-400 to-blue-300 bg-clip-text text-transparent">Mentora</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+        <!-- Dashboard -->
+        <a href="{{ route('admin.dashboard') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-red-600 to-blue-500 text-white shadow-lg shadow-red-500/25' : 'text-red-300 hover:bg-red-700/50 hover:text-white' }}">
+            <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-white/20' : 'bg-red-700/50 group-hover:bg-red-600/50' }}">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                </svg>
+            </div>
+            <span class="font-medium">Dashboard</span>
+        </a>
+
+        <!-- User Management -->
+        <div class="pt-6">
+            <div class="flex items-center px-4 mb-3">
+                <span class="text-xs font-semibold text-red-400 uppercase tracking-wider">Management</span>
+            </div>
+            <a href="{{ route('admin.users.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-blue-300 hover:bg-blue-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-white/20' : 'bg-blue-700/50 group-hover:bg-blue-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">User Management</span>
+            </a>
+        </div>
+
+        <!-- Financial Management -->
+        <div class="pt-6">
+            <div class="flex items-center px-4 mb-3">
+                <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Finance</span>
+            </div>
+            <a href="{{ route('admin.financial.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.financial.*') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-blue-300 hover:bg-blue-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.financial.*') ? 'bg-white/20' : 'bg-blue-700/50 group-hover:bg-blue-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 10h14M9 16h6"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Financial Management</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- User Section & Logout -->
+    <div class="p-4 border-t border-red-700/50 bg-red-800/30">
+        <div class="flex items-center mb-3 p-3 rounded-xl bg-red-700/30">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-blue-600 rounded-full flex items-center justify-center mr-3">
+                <span class="text-white text-sm font-semibold">{{ substr(Auth::user()->name ?? 'A', 0, 1) }}</span>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-white">{{ Auth::user()->name ?? 'Admin' }}</p>
+                <p class="text-xs text-red-400">Admin</p>
+            </div>
+        </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="group w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-red-300 hover:bg-red-600/20 hover:text-red-400 border border-red-600/50 hover:border-red-500/50">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-red-700/50 group-hover:bg-red-600/20">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Logout</span>
+            </button>
+        </form>
+    </div>
+</aside> 

@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@mentora.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
             'role' => 'admin',
             'is_active' => true,
         ]);
