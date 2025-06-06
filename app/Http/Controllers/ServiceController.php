@@ -112,4 +112,6 @@ class ServiceController extends Controller
         return redirect()->route('services.manage')
             ->with('success', 'Service updated successfully.');
     }
+
 }
+

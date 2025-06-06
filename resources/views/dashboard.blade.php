@@ -7,9 +7,40 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
                 <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+                    <h3 class="text-lg font-semibold mb-4">Welcome, {{ Auth::user()->name }}!</h3>
+                    <p class="mb-2">You're logged in as a <span class="font-bold text-blue-600">Tutee</span>.</p>
+                </div>
+            </div>
+
+            <!-- Payments Section -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-blue-700 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 10c-4.418 0-8-1.79-8-4V7a2 2 0 012-2h12a2 2 0 012 2v7c0 2.21-3.582 4-8 4z"/></svg>
+                        Payments
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Outstanding Balance Card -->
+                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm flex flex-col items-center">
+                            <span class="text-sm text-blue-700 mb-1">Outstanding Balance</span>
+                            <span class="text-2xl font-bold text-blue-900">Rp 0</span>
+                            <span class="text-xs text-blue-400">(Feature coming soon)</span>
+                        </div>
+                        <!-- Make a Payment Card -->
+                        <a href="{{ route('payments.create') }}" class="bg-green-50 p-4 rounded-lg shadow-sm flex flex-col items-center hover:bg-green-100 transition">
+                            <span class="text-sm text-green-700 mb-1">Make a Payment</span>
+                            <svg class="w-8 h-8 text-green-600 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            <span class="text-xs text-green-400">Pay for your sessions</span>
+                        </a>
+                        <!-- Payment History Card -->
+                        <a href="{{ route('payments.index') }}" class="bg-yellow-50 p-4 rounded-lg shadow-sm flex flex-col items-center hover:bg-yellow-100 transition">
+                            <span class="text-sm text-yellow-700 mb-1">Payment History</span>
+                            <svg class="w-8 h-8 text-yellow-600 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M9 16h6"/></svg>
+                            <span class="text-xs text-yellow-400">View all your payments</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
