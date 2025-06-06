@@ -1,18 +1,28 @@
-<?php
-if (!auth()->check() || (auth()->check() && (auth()->user()->role === 'tutee' || auth()->user()->role === 'tutor'))) {
+@php
+$navigation = [];
+
+if (!auth()->check() || in_array(auth()->user()->role ?? null, ['tutee', 'tutor'])) {
     $navigation['Browse Tutors'] = route('tutors.index');
     $navigation['Articles & Tips'] = route('articles.index');
 }
-if (auth()->check() && auth()->user()->role === 'tutor') {
-    $navigation['My Sessions'] = route('tutor.sessions');
+
+if (auth()->check()) {
+    switch (auth()->user()->role) {
+        case 'admin':
+            $navigation['Admin Dashboard'] = route('admin.dashboard');
+            break;
+        case 'tutor':
+            $navigation['My Sessions'] = route('tutor.sessions');
+            break;
+        case 'tutee':
+            $navigation['My Bookings'] = route('tutee.sessions');
+            break;
+        case 'client':
+            $navigation['My Orders'] = route('orders.index');
+            break;
+    }
 }
-if (auth()->check() && auth()->user()->role === 'tutee') {
-    $navigation['My Bookings'] = route('tutee.sessions');
-}
-if (auth()->check() && auth()->user()->role === 'admin') {
-    $navigation['Admin Dashboard'] = route('admin.dashboard');
-}
-?>
+@endphp
 
 <nav class="bg-white border-b border-gray-200">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +46,6 @@ if (auth()->check() && auth()->user()->role === 'admin') {
                             {{ $name }}
                         </a>
                     @endforeach
-
                 </div>
             </div>
 
@@ -58,8 +67,6 @@ if (auth()->check() && auth()->user()->role === 'admin') {
                             </svg>
                         </button>
 
-                        <div x-show="open" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-
                         <div x-show="open"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="transform opacity-0 scale-95"
@@ -67,15 +74,13 @@ if (auth()->check() && auth()->user()->role === 'admin') {
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                             style="display: none;">
-
+                             class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Profile
                             </a>
 
                             @if(auth()->user()->role === 'client')
-                                <a  href="{{ route('orders.index') }}"class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     My Orders
                                 </a>
                             @endif
@@ -129,9 +134,7 @@ if (auth()->check() && auth()->user()->role === 'admin') {
             @endforeach
         </div>
 
-
-
-        <!-- Mobile menu authentication links -->
+        <!-- Mobile menu auth links -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             @auth
                 <div class="px-4">

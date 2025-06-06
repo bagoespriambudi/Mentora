@@ -9,6 +9,8 @@ use App\Http\Controllers\FinancialController;
 use App\Http\Controllers\TutorDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\OrderController;
+
 
 // Guest landing page
 Route::get('/', function () {
@@ -86,3 +88,11 @@ Route::middleware(['auth'])->prefix('tutor')->name('tutor.')->group(function () 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('reviews', [\App\Http\Controllers\Admin\ReviewMonitorController::class, 'index'])->name('reviews.index');
 });
+
+// Order Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/services/{service}/order', [OrderController::class, 'create'])->name('orders.create');
+    Route::post('/services/{service}/order', [OrderController::class, 'store'])->name('orders.store');
+});
+
