@@ -72,7 +72,7 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':admin'
     Route::post('/refunds/{refund}/reject', [RefundController::class, 'reject'])->name('refunds.reject');
 });
 
-// Freelancer Service Routes
+// Tutor Service Routes
 Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':tutor'])->group(function () {
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');

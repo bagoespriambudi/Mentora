@@ -28,14 +28,14 @@ class Project extends Model
         'end_date' => 'date'
     ];
 
-    public function client(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function freelancer(): BelongsTo
+    public function tutor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'freelancer_id');
+        return $this->belongsTo(User::class, 'tutor_id');
     }
 
     public function service(): BelongsTo
