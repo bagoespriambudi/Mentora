@@ -34,6 +34,16 @@
                 </div>
                 <span class="font-medium">User Management</span>
             </a>
+
+            <!-- Category Management -->
+            <a href="{{ route('admin.categories.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-blue-300 hover:bg-blue-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.categories.*') ? 'bg-white/20' : 'bg-blue-700/50 group-hover:bg-blue-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 4a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1H2V4zM2 7h16v9a2 2 0 01-2 2H4a2 2 0 01-2-2V7z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Category Management</span>
+            </a>
         </div>
 
         <!-- Financial Management -->
