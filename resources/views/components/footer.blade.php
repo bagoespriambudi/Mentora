@@ -9,20 +9,7 @@
                 </p>
             </div>
 
-            <!-- Categories -->
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Categories</h3>
-                <ul class="space-y-2">
-                    @foreach(\App\Models\Category::take(5)->get() as $category)
-                        <li>
-                            <a href="{{ route('subjects.show', $category) }}"
-                               class="text-gray-600 hover:text-blue-600">
-                                {{ $category->name }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+           
 
             <!-- Quick Links -->
             <div>
