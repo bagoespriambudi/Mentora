@@ -10,7 +10,7 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        if (Auth::user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin') {
             abort(403, 'Unauthorized');
         }
         return view('admin.dashboard');

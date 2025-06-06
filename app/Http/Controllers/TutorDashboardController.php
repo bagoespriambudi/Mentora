@@ -9,7 +9,7 @@ class TutorDashboardController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role !== 'tutor') {
+        if (auth()->user()->role !== 'tutor') {
             abort(403, 'Unauthorized');
         }
         return view('tutor.dashboard');
