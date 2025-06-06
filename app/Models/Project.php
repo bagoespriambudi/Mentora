@@ -12,8 +12,8 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
-        'freelancer_id',
+        'user_id',
+        'tutor_id',
         'service_id',
         'status',
         'amount',

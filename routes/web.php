@@ -73,7 +73,7 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':admin'
 });
 
 // Freelancer Service Routes
-Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':freelancer'])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':tutor'])->group(function () {
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
     Route::get('/services/manage', [ServiceController::class, 'manage'])->name('services.manage');

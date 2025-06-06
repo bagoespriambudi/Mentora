@@ -2,6 +2,8 @@
 
 
 if (!auth()->check() || (auth()->check() && (auth()->user()->role === 'tutee' || auth()->user()->role === 'tutor'))) {
+    $navigation['Post a Service'] = route('services.create');
+    $navigation['Manage Service'] = route('services.manage');
     $navigation['Browse Tutors'] = route('tutors.index');
     $navigation['Articles & Tips'] = route('articles.index');
 }
