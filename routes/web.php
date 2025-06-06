@@ -8,6 +8,7 @@ use App\Http\Controllers\RefundController;
 use App\Http\Controllers\FinancialController;
 use App\Http\Controllers\TutorDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\ReviewController;
 
 // Guest landing page
 Route::get('/', function () {
@@ -45,7 +46,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show', 'create', 'store']);
 
@@ -66,4 +67,22 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':admin'
     // Refund Management
     Route::post('/refunds/{refund}/approve', [RefundController::class, 'approve'])->name('refunds.approve');
     Route::post('/refunds/{refund}/reject', [RefundController::class, 'reject'])->name('refunds.reject');
+});
+
+// Tutee Reviews
+Route::middleware(['auth'])->prefix('tutee')->name('tutee.')->group(function () {
+    Route::get('reviews', [\App\Http\Controllers\ReviewController::class, 'tuteeIndex'])->name('reviews.index');
+    Route::get('reviews/create/{service}', [\App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
+    Route::post('reviews/{service}', [\App\Http\Controllers\ReviewController::class, 'storeTuteeReview'])->name('reviews.store');
+});
+
+// Tutor Reviews
+Route::middleware(['auth'])->prefix('tutor')->name('tutor.')->group(function () {
+    Route::get('reviews', [\App\Http\Controllers\ReviewController::class, 'tutorIndex'])->name('reviews.index');
+    Route::post('reviews/respond/{review}', [\App\Http\Controllers\ReviewController::class, 'respond'])->name('reviews.respond');
+});
+
+// Admin Review Monitor
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('reviews', [\App\Http\Controllers\Admin\ReviewMonitorController::class, 'index'])->name('reviews.index');
 });
