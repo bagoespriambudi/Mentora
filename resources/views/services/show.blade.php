@@ -20,7 +20,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-6">
-                    <!-- Service Header -->
+                    <!-- Session Header -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="flex items-start justify-between mb-4">
                             <div>
@@ -102,9 +102,9 @@
                         </div>
                     </div>
 
-                    <!-- Service Details -->
+                    <!-- Session Details -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Service Details</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Details</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex items-center p-4 bg-gray-50 rounded-lg">
                                 <div class="flex-shrink-0">
@@ -113,7 +113,7 @@
                                     </svg>
                                 </div>
                                 <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">Delivery Time</p>
+                                    <p class="text-sm font-medium text-gray-900">Session Period</p>
                                     <p class="text-sm text-gray-600">{{ $service->duration_days }} days</p>
                                 </div>
                             </div>

@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('session_id')->constrained('tutor_sessions')->onDelete('cascade');
             $table->foreignId('tutee_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('payment_id')->nullable()->constrained('payment_transactions')->onDelete('set null');
             $table->string('status')->default('pending');
             $table->text('notes')->nullable();
             $table->timestamp('scheduled_at')->nullable();

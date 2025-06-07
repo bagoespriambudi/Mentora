@@ -5,12 +5,12 @@
             <div class="mb-8">
                 <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
                     <a href="{{ route('services.manage') }}" class="hover:text-gray-700 transition-colors duration-150">
-                        My Services
+                        My Sessions
                     </a>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                    <span class="text-gray-900">Edit Service</span>
+                    <span class="text-gray-900">Edit Session</span>
                 </nav>
                 
                 <div class="flex items-center space-x-4">
@@ -19,11 +19,11 @@
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
-                        Back to Services
+                        Back to Sessions
                     </a>
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Edit Service</h1>
-                        <p class="text-gray-600 mt-1">Update your service information</p>
+                        <h1 class="text-3xl font-bold text-gray-900">Edit Session</h1>
+                        <p class="text-gray-600 mt-1">Update your session information</p>
                     </div>
                 </div>
             </div>
@@ -61,10 +61,10 @@
                     <div class="border-b border-gray-200 pb-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Service Title -->
+                            <!-- Session Title -->
                             <div class="md:col-span-2">
                                 <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Service Title <span class="text-red-500">*</span>
+                                    Session Title <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" 
                                        id="title" 
@@ -109,7 +109,7 @@
                                                value="1" 
                                                {{ old('is_active', $service->is_active) ? 'checked' : '' }}
                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                        <label for="is_active" class="text-sm text-gray-700">Service is active</label>
+                                        <label for="is_active" class="text-sm text-gray-700">Session is active</label>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                                       name="description" 
                                       rows="4" 
                                       required 
-                                      placeholder="Describe what you offer in this service..."
+                                      placeholder="Describe what you offer in this session..."
                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150">{{ old('description', $service->description) }}</textarea>
                             @error('description') 
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p> 
@@ -272,7 +272,7 @@
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
-                            Update Service
+                            Update Session
                         </button>
                     </div>
                 </form>

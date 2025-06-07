@@ -6,7 +6,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="mb-4 sm:mb-0">
                         <h1 class="text-3xl font-bold text-gray-900">My Sessions</h1>
-                        <p class="text-gray-600 mt-1">Manage your tutor session</p>
+                        <p class="text-gray-600 mt-1">Manage your tutor sessions</p>
                     </div>
                     <a href="{{ route('services.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
@@ -50,7 +50,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">No session yet</h3>
-                    <p class="text-gray-600 mb-6">Start building your teaching business by creating your first service</p>
+                    <p class="text-gray-600 mb-6">Start building your teaching business by creating your first session</p>
                     <a href="{{ route('services.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,7 +129,7 @@
                                                 <form action="{{ route('services.destroy', $service) }}" 
                                                       method="POST" 
                                                       class="inline-block" 
-                                                      onsubmit="return confirm('Are you sure you want to delete this service?');">
+                                                      onsubmit="return confirm('Are you sure you want to delete this session?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" 

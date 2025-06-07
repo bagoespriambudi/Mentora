@@ -40,6 +40,15 @@
                                         </td>
                                         <td class="px-4 py-2 whitespace-nowrap">
                                             <a href="{{ route('payments.show', $transaction) }}" class="text-blue-600 hover:underline">Details</a>
+                                            @if($transaction->status === 'pending')
+                                                <span class="mx-1">|</span>
+                                                <a href="{{ route('payments.show', $transaction) }}#update-form" class="text-green-600 hover:underline">Update</a>
+                                                <span class="mx-1">|</span>
+                                                <form action="{{ route('payments.cancel', $transaction) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Are you sure you want to cancel this payment?')">Cancel</button>
+                                                </form>
+                                            @endif
                                             @if($transaction->status === 'completed' && !$transaction->refundRequest)
                                                 <span class="mx-1">|</span>
                                                 <a href="{{ route('refunds.create', $transaction) }}" class="text-red-600 hover:underline">Request Refund</a>

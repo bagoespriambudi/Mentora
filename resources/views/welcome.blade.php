@@ -364,7 +364,7 @@
                 <a href="{{ route('register') }}" class="btn btn-primary">Get Started</a>
             </div>
         </div>
-    </header>
+        </header>
 
     <!-- Main content -->
     <main class="main-content">
@@ -456,7 +456,7 @@
                     <p class="feature-desc">
                         Competitive and student-friendly pricing with secure payment processing and transaction history tracking.
                     </p>
-                </div>
+        </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">📚</div>

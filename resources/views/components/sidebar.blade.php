@@ -28,19 +28,10 @@
             </div>
             
             @if(auth()->check() && auth()->user()->role === 'tutor')
-                <a href="{{ route('services.manage') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('services.manage') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
-                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('services.manage') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
+                <a href="{{ route('sessions.manage') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('sessions.manage') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('sessions.manage') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium">Manage Services</span>
-                </a>
-                <!-- Sessions for tutors -->
-                <a href="#" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-700/50 hover:text-white">
-                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-slate-700/50 group-hover:bg-slate-600/50">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zm0 2h4v2H8V4z"/>
                         </svg>
                     </div>
                     <span class="font-medium">Manage Sessions</span>

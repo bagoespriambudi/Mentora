@@ -5,7 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RefundController;
-use App\Http\Controllers\FinancialController;
+// use App\Http\Controllers\FinancialController;
 use App\Http\Controllers\TutorDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ReviewController;
@@ -28,9 +28,7 @@ require __DIR__ . '/auth.php';
 
 // Basic authenticated route
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
     Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
     Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+    Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+    Route::post('/payments/{payment}/cancel', [PaymentController::class, 'cancel'])->name('payments.cancel');
 
     // Refund Routes
     Route::get('/payments/{payment}/refund', [RefundController::class, 'create'])->name('refunds.create');
@@ -53,8 +53,6 @@ Route::middleware('auth')->group(function () {
     // Service Routes
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
-
-    // Tutor Service Management
     Route::get('/services/manage', [ServiceController::class, 'manage'])->name('services.manage');
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
@@ -80,7 +78,7 @@ Route::post('/contents/{content}/report', [ContentController::class, 'reportSubm
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show', 'create', 'store']);
+    // Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show', 'create', 'store']);
 
     // Admin Category Routes
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -92,9 +90,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Admin Financial Routes
-    Route::get('/financial', [FinancialController::class, 'index'])->name('financial.index');
-    Route::post('/financial/report', [FinancialController::class, 'generateReport'])->name('financial.report');
-    Route::get('/financial/report/{report}/export', [FinancialController::class, 'exportReport'])->name('financial.export');
+    // Route::get('/financial', [FinancialController::class, 'index'])->name('financial.index');
+    // Route::post('/financial/report', [FinancialController::class, 'generateReport'])->name('financial.report');
+    // Route::get('/financial/report/{report}/export', [FinancialController::class, 'exportReport'])->name('financial.export');
     
     // Refund Management
     Route::post('/refunds/{refund}/approve', [RefundController::class, 'approve'])->name('refunds.approve');
@@ -113,6 +111,9 @@ Route::middleware(['auth'])->prefix('tutee')->name('tutee.')->group(function () 
     Route::get('reviews', [\App\Http\Controllers\ReviewController::class, 'tuteeIndex'])->name('reviews.index');
     Route::get('reviews/create/{service}', [\App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
     Route::post('reviews/{service}', [\App\Http\Controllers\ReviewController::class, 'storeTuteeReview'])->name('reviews.store');
+    Route::get('reviews/edit/{review}', [\App\Http\Controllers\ReviewController::class, 'edit'])->name('reviews.edit');
+    Route::delete('reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::put('reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'update'])->name('reviews.update');
 });
 
 // Tutor Reviews

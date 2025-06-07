@@ -25,8 +25,7 @@
                         <!-- Outstanding Balance Card -->
                         <div class="bg-blue-50 p-4 rounded-lg shadow-sm flex flex-col items-center">
                             <span class="text-sm text-blue-700 mb-1">Outstanding Balance</span>
-                            <span class="text-2xl font-bold text-blue-900">Rp 0</span>
-                            <span class="text-xs text-blue-400">(Feature coming soon)</span>
+                            <span class="text-2xl font-bold text-blue-900">Rp {{ number_format($outstandingBalance, 2, ',', '.') }}</span>
                         </div>
                         <!-- Make a Payment Card -->
                         <a href="{{ route('payments.create') }}" class="bg-green-50 p-4 rounded-lg shadow-sm flex flex-col items-center hover:bg-green-100 transition">

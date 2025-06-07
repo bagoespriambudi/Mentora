@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Booking;
 
 class ReviewController extends Controller
 {
@@ -50,32 +51,24 @@ class ReviewController extends Controller
 
     public function edit(Review $review)
     {
-        // Check if user owns this review
-        if (Auth::id() !== $review->client_id) {
-            return back()->with('error', 'Unauthorized action.');
+        if (Auth::id() !== $review->tutee_id) {
+            abort(403, 'Unauthorized');
         }
-
-        return view('reviews.edit', compact('review'));
+        $review->load(['tutor', 'session']);
+        return view('tutee.reviews.edit', compact('review'));
     }
 
     public function update(Request $request, Review $review)
     {
-        // Check if user owns this review
-        if (Auth::id() !== $review->client_id) {
-            return back()->with('error', 'Unauthorized action.');
+        if (Auth::id() !== $review->tutee_id) {
+            abort(403, 'Unauthorized');
         }
-
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'title' => 'nullable|string|max:255',
-            'comment' => 'required|string|min:10',
-            'is_public' => 'boolean'
+            'review' => 'required|string',
         ]);
-
         $review->update($validated);
-
-        return redirect()->route('orders.show', $review->project)
-            ->with('success', 'Review updated successfully!');
+        return redirect()->route('tutee.reviews.index')->with('success', 'Review updated!');
     }
 
     public function destroy(Review $review)
@@ -98,16 +91,24 @@ class ReviewController extends Controller
         if (Auth::user()->role !== 'tutee') {
             abort(403, 'Unauthorized');
         }
-        $reviews = Review::where('tutee_id', Auth::id())->with('tutor')->latest()->get();
-        return view('tutee.reviews.index', compact('reviews'));
+        $tuteeId = Auth::id();
+        $reviews = \App\Models\Review::where('tutee_id', $tuteeId)->with('tutor', 'session')->latest()->get();
+        $finishedBookings = \App\Models\Booking::where('tutee_id', $tuteeId)
+            ->where('status', 'finished')
+            ->with(['session' => function($q) { $q->with('tutor'); }])
+            ->get();
+        // Map session_id to review for quick lookup
+        $reviewedSessionIds = $reviews->pluck('session_id')->toArray();
+        return view('tutee.reviews.index', compact('reviews', 'finishedBookings', 'reviewedSessionIds'));
     }
 
     // Tutee: Create review form
-    public function create(Service $service)
+    public function create($sessionId)
     {
         if (Auth::user()->role !== 'tutee') {
             abort(403, 'Unauthorized');
         }
+        $service = \App\Models\Session::with('tutor')->findOrFail($sessionId);
         return view('tutee.reviews.create', compact('service'));
     }
 
@@ -123,7 +124,7 @@ class ReviewController extends Controller
         ]);
         Review::create([
             'tutee_id' => Auth::id(),
-            'tutor_id' => $service->user_id,
+            'tutor_id' => $service->tutor_id,
             'session_id' => $service->id,
             'rating' => $request->rating,
             'review' => $request->review,

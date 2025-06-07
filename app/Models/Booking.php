@@ -19,11 +19,16 @@ class Booking extends Model
 
     public function session()
     {
-        return $this->belongsTo(TutorSession::class);
+        return $this->belongsTo(\App\Models\Session::class, 'session_id');
     }
 
     public function tutee()
     {
         return $this->belongsTo(User::class, 'tutee_id');
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(\App\Models\PaymentTransaction::class, 'payment_id');
     }
 } 
