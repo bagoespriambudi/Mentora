@@ -5,8 +5,8 @@
             <div class="mb-8">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="mb-4 sm:mb-0">
-                        <h1 class="text-3xl font-bold text-gray-900">My Services</h1>
-                        <p class="text-gray-600 mt-1">Manage your freelance services</p>
+                        <h1 class="text-3xl font-bold text-gray-900">My Sessions</h1>
+                        <p class="text-gray-600 mt-1">Manage your tutor session</p>
                     </div>
                     <a href="{{ route('services.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
@@ -49,14 +49,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No services yet</h3>
-                    <p class="text-gray-600 mb-6">Start building your freelance business by creating your first service</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No session yet</h3>
+                    <p class="text-gray-600 mb-6">Start building your teaching business by creating your first service</p>
                     <a href="{{ route('services.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                         </svg>
-                        Create Your First Service
+                        Create Your First Session
                     </a>
                 </div>
             @else
@@ -66,11 +66,11 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Session</th>
                                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Category</th>
                                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Status</th>
-                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Delivery</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Session Period</th>
                                     <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -89,7 +89,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-semibold text-gray-900">${{ number_format($service->price, 2) }}</div>
+                                            <div class="text-sm font-semibold text-gray-900">Rp.{{ number_format($service->price, 2) }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                                             @if($service->is_active)

@@ -139,11 +139,11 @@
                             <!-- Price -->
                             <div>
                                 <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Price (USD) <span class="text-red-500">*</span>
+                                    Price (IDR) <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <span class="text-gray-500 sm:text-sm">$</span>
+                                        <span class="text-gray-500 sm:text-sm">Rp.</span>
                                     </div>
                                     <input type="number" 
                                            id="price" 

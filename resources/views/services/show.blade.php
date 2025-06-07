@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <div class="text-3xl font-bold text-gray-900">${{ number_format($service->price, 2) }}</div>
+                                <div class="text-3xl font-bold text-gray-900">Rp.{{ number_format($service->price, 2) }}</div>
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                     <!-- Service Images -->
                     @if($service->thumbnail || ($service->gallery && count($service->gallery) > 0))
                         <div class="bg-white rounded-lg shadow-sm p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Service Images</h3>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Images</h3>
                             
                             @if($service->thumbnail)
                                 <div class="mb-6">
@@ -147,7 +147,7 @@
                                         <hr class="my-3">
                                         <div class="flex justify-between items-center">
                                             <span class="text-sm font-medium text-gray-900">Total</span>
-                                            <span class="text-xl font-bold text-gray-900">${{ number_format($service->price, 2) }}</span>
+                                            <span class="text-xl font-bold text-gray-900">Rp.{{ number_format($service->price, 2) }}</span>
                                         </div>
                                     </div>
                                     <a href="{{ route('orders.create', $service) }}" 
@@ -160,26 +160,26 @@
                                 </div>
                             @elseif(auth()->user()->role === 'freelancer' && $service->user_id === auth()->id())
                                 <div class="text-center">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Service</h3>
-                                    <p class="text-sm text-gray-600 mb-6">This is your service. You can edit the details below.</p>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Session</h3>
+                                    <p class="text-sm text-gray-600 mb-6">This is your session. You can edit the details below.</p>
                                     <a href="{{ route('services.edit', $service) }}" 
                                        class="w-full inline-flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
-                                        Edit Service
+                                        Edit Session
                                     </a>
                                 </div>
                             @else
                                 <div class="text-center">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Service Unavailable</h3>
-                                    <p class="text-sm text-gray-600">This service is currently not available for ordering.</p>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Unavailable</h3>
+                                    <p class="text-sm text-gray-600">This session is currently not available for ordering.</p>
                                 </div>
                             @endif
                         @else
                             <div class="text-center">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Ready to Order?</h3>
-                                <p class="text-sm text-gray-600 mb-6">Login to your account to place an order for this service.</p>
+                                <p class="text-sm text-gray-600 mb-6">Login to your account to place an order for this session.</p>
                                 <a href="{{ route('login') }}" 
                                    class="w-full inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,9 +191,11 @@
                         @endauth
                     </div>
 
-                    <!-- Freelancer Info Card -->
+                    <!-- Tutor
+                      Info Card -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">About the Freelancer</h3>
+
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">About the Tutor</h3>
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
                                 <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
@@ -211,7 +213,7 @@
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>
-                                        Verified freelancer
+                                        Verified tutor
                                     </div>
                                     <div class="flex items-center text-sm text-gray-600">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,7 +237,7 @@
                             <div class="ml-3">
                                 <h4 class="text-sm font-medium text-blue-900">Need help?</h4>
                                 <p class="mt-1 text-sm text-blue-700">
-                                    Have questions about this service? Contact the freelancer for more details before placing your order.
+                                    Have questions about this session? Contact the tutor for more details before placing your order.
                                 </p>
                             </div>
                         </div>
