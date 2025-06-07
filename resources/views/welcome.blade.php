@@ -443,7 +443,7 @@
                 <span>Mentora</span>
             </div>
             <div class="nav-buttons">
-                <a href="#" class="btn btn-secondary">Sign In</a>
+                <a href="{{ route('login') }}" class="btn btn-secondary">Sign In</a>
                 <a href="#" class="btn btn-primary">Get Started</a>
             </div>
         </div>

@@ -21,34 +21,45 @@ class ContentController extends Controller
     {
         return view('Admin.contents.create');
     }
-
-    // Store new content
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
-        Content::create($validated);
-        return redirect()->route('admin.contents.index')->with('success', 'Content created!');
-    }
-
-    // Show edit form
+     // Show edit form
     public function edit(Content $content)
     {
         return view('Admin.contents.edit', compact('content'));
     }
 
-    // Update content
-    public function update(Request $request, Content $content)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
-        $content->update($validated);
-        return redirect()->route('admin.contents.index')->with('success', 'Content updated!');
-    }
+   public function store(Request $request)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'type' => 'required|in:faq,guide,policy',
+        'order' => 'nullable|integer|min:1',
+        'content' => 'required|string',
+        'is_active' => 'nullable|boolean',
+    ]);
+
+    // Set default value if not present
+    $validated['is_active'] = $request->has('is_active');
+
+    Content::create($validated);
+    return redirect()->route('admin.contents.index')->with('success', 'Content created!');
+}
+
+public function update(Request $request, Content $content)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'type' => 'required|in:faq,guide,policy',
+        'order' => 'nullable|integer|min:1',
+        'content' => 'required|string',
+        'is_active' => 'nullable|boolean',
+    ]);
+
+    $validated['is_active'] = $request->has('is_active');
+
+    $content->update($validated);
+    return redirect()->route('admin.contents.index')->with('success', 'Content updated!');
+}
+
 
     // Delete content
     public function destroy(Content $content)
