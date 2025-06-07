@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentora | Telkom University's Premier Learning & Freelancing Platform</title>
@@ -342,8 +342,8 @@
                 padding: 1.5rem;
             }
         }
-    </style>
-</head>
+            </style>
+    </head>
 <body>
     <!-- Animated background -->
     <div class="bg-animation">
@@ -484,7 +484,34 @@
                     </a>
                 </div>
             </section>
-        </div>
-    </main>
-</body>
-</html>
+
+           <!-- Knowledge Base Section -->
+<section class="hero-section" style="margin-top: 4rem;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #fff;">
+        Explore Our Knowledge Hub
+    </h2>
+    <p style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 2rem;">
+        Discover valuable insights and resources shared by our Telkom University community
+    </p>
+    
+    <div class="features" style="margin-top: 3rem;">
+        @forelse($contents as $content)
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3 class="feature-title">{{ $content->title }}</h3>
+                <p class="feature-desc" style="margin-bottom: 1.5rem;">
+                    {{ Str::limit(strip_tags($content->content), 120) }}
+                </p>
+                <a href="{{ route('contents.show', $content) }}" 
+                   class="btn btn-primary" 
+                   style="display: inline-block; margin-top: auto;">
+                    Read More
+                </a>
+            </div>
+        @empty
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #cbd5e1; font-size: 1.1rem;">
+                📚 Knowledge base content coming soon! Our community is preparing valuable resources for you.
+            </div>
+        @endforelse
+    </div>
+</section>

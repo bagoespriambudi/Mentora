@@ -15,10 +15,9 @@
                 <ul class="space-y-2">
                     @foreach(\App\Models\Category::take(5)->get() as $category)
                         <li>
-                            <a href="{{ route('subjects.show', $category) }}"
-                               class="text-gray-600 hover:text-blue-600">
+                            {{-- <a href="{{ route('subjects.show', $category) }}"> --}}
                                 {{ $category->name }}
-                            </a>
+                            {{-- </a> --}}
                         </li>
                     @endforeach
                 </ul>

@@ -27,7 +27,81 @@
                 <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Learning</span>
             </div>
             
-            <!-- Removed My Sessions and Find Tutors links -->
+            @if(auth()->check() && auth()->user()->role === 'tutor')
+                <a href="{{ route('services.manage') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('services.manage') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('services.manage') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Manage Services</span>
+                </a>
+                <!-- Sessions for tutors -->
+                <a href="#" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-700/50 hover:text-white">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-slate-700/50 group-hover:bg-slate-600/50">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zm0 2h4v2H8V4z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Manage Sessions</span>
+                </a>
+            @endif
+
+            @if(auth()->check() && auth()->user()->role === 'tutee')
+                <a href="{{ route('services.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('services.index') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('services.index') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Find Services</span>
+                </a>
+                <!-- Sessions for tutees -->
+                <a href="#" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-700/50 hover:text-white">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-slate-700/50 group-hover:bg-slate-600/50">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zm0 2h4v2H8V4z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Browse Sessions</span>
+                </a>
+            @endif
+        </div>
+
+        <!-- Content Section -->
+        <div class="pt-6">
+            <div class="flex items-center px-4 mb-3">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Content</span>
+            </div>
+            
+            @if(auth()->check() && auth()->user()->role === 'admin')
+                <a href="{{ route('admin.contents.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.contents.*') ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.contents.*') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Content Management</span>
+                </a>
+                <a href="{{ route('admin.contents.reported') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.contents.reported') ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.contents.reported') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18.364 5.636a9 9 0 11-12.728 0 9 9 0 0112.728 0zM9 9v2h2V9H9zm0 4h2v2H9v-2z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Reported Contents</span>
+                </a>
+            @endif
+            @if(auth()->check() && (auth()->user()->role === 'tutor' || auth()->user()->role === 'tutee'))
+                <a href="{{ route('contents.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('contents.index') ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('contents.index') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-slate-600/50' }}">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/>
+                        </svg>
+                    </div>
+                    <span class="font-medium">Browse Content</span>
+                </a>
+            @endif
         </div>
 
         <!-- Payments Section -->

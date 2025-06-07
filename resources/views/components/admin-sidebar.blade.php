@@ -35,6 +35,16 @@
                 <span class="font-medium">User Management</span>
             </a>
 
+            <!-- Session Management -->
+            <a href="#" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-blue-300 hover:bg-blue-700/50 hover:text-white">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-blue-700/50 group-hover:bg-blue-600/50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zm0 2h4v2H8V4z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Session Management</span>
+            </a>
+
             <!-- Category Management -->
             <a href="{{ route('admin.categories.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/25' : 'text-blue-300 hover:bg-blue-700/50 hover:text-white' }}">
                 <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.categories.*') ? 'bg-white/20' : 'bg-blue-700/50 group-hover:bg-blue-600/50' }}">
@@ -58,6 +68,29 @@
                     </svg>
                 </div>
                 <span class="font-medium">Financial Management</span>
+            </a>
+        </div>
+
+        <!-- Content Management -->
+        <div class="pt-6">
+            <div class="flex items-center px-4 mb-3">
+                <span class="text-xs font-semibold text-purple-400 uppercase tracking-wider">Content</span>
+            </div>
+            <a href="{{ route('admin.contents.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.contents.*') ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/25' : 'text-purple-300 hover:bg-purple-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.contents.*') ? 'bg-white/20' : 'bg-purple-700/50 group-hover:bg-purple-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Content Management</span>
+            </a>
+            <a href="{{ route('admin.contents.reported') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.contents.reported') ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/25' : 'text-red-300 hover:bg-red-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.contents.reported') ? 'bg-white/20' : 'bg-red-700/50 group-hover:bg-red-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M18.364 5.636a9 9 0 11-12.728 0 9 9 0 0112.728 0zM9 9v2h2V9H9zm0 4h2v2H9v-2z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Reported Contents</span>
             </a>
         </div>
     </nav>

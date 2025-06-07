@@ -8,7 +8,9 @@
         <div class="bg-white shadow rounded-lg p-6">
             <div class="mb-4 text-gray-700">{!! nl2br(e($content->body ?? $content->content)) !!}</div>
             @auth
-                <a href="{{ route('contents.report', $content) }}" class="bg-red-600 text-white px-4 py-2 rounded">Report Content</a>
+                @if(auth()->user()->role === 'tutor' || auth()->user()->role === 'tutee')
+                    <a href="{{ route('contents.report', $content) }}" class="bg-red-600 text-white px-4 py-2 rounded">Report Content</a>
+                @endif
             @endauth
             <a href="{{ route('contents.index') }}" class="text-blue-600 hover:underline ml-4">Back to Contents</a>
         </div>

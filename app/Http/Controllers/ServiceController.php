@@ -9,14 +9,46 @@ use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
+    public function index()
+    {
+        $services = Service::with('tutor')->latest()->paginate(10);
+        return view('services.index', compact('services'));
+    }
+
+    public function show(Service $service)
+    {
+        return view('services.show', compact('service'));
+    }
+
+    public function manage()
+    {
+        // Inline role check
+        if (auth()->user()->role !== 'tutor') {
+            abort(403, 'Only tutors can manage services.');
+        }
+
+        $services = Service::where('tutor_id', auth()->id())->latest()->paginate(10);
+        return view('services.manage', compact('services'));
+    }
+
     public function create()
     {
+        // Inline role check
+        if (auth()->user()->role !== 'tutor') {
+            abort(403, 'Only tutors can create services.');
+        }
+
         $categories = Category::where('is_active', true)->get();
         return view('services.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
+        // Inline role check
+        if (auth()->user()->role !== 'tutor') {
+            abort(403, 'Only tutors can create services.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -40,7 +72,7 @@ class ServiceController extends Controller
         $validated['gallery'] = $gallery;
 
         // Add user_id and is_active
-        $validated['user_id'] = Auth::id();
+        $validated['tutor_id'] = auth()->id();
         $validated['is_active'] = true;
 
         Service::create($validated);
@@ -49,41 +81,11 @@ class ServiceController extends Controller
             ->with('success', 'Service created successfully!');
     }
 
-    public function manage()
-    {
-        $services = Service::where('user_id', Auth::id())
-            ->with('category')
-            ->latest()
-            ->paginate(10);
-
-        return view('services.manage', compact('services'));
-    }
-
-    public function show(Service $service)
-    {
-        return view('services.show', compact('service'));
-    }
-
-    public function destroy(Service $service)
-    {
-        // Check if the authenticated user owns this service
-        if ($service->user_id !== Auth::id()) {
-            return redirect()->route('services.manage')
-                ->with('error', 'Unauthorized action.');
-        }
-
-        $service->delete();
-
-        return redirect()->route('services.manage')
-            ->with('success', 'Service deleted successfully.');
-    }
-
     public function edit(Service $service)
     {
-        // Check if the authenticated user owns this service
-        if ($service->user_id !== Auth::id()) {
-            return redirect()->route('services.manage')
-                ->with('error', 'Unauthorized action.');
+        // Inline role check
+        if (auth()->user()->role !== 'tutor' || $service->tutor_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
         }
 
         $categories = Category::where('is_active', true)->get();
@@ -92,10 +94,9 @@ class ServiceController extends Controller
 
     public function update(Request $request, Service $service)
     {
-        // Check if the authenticated user owns this service
-        if ($service->user_id !== Auth::id()) {
-            return redirect()->route('services.manage')
-                ->with('error', 'Unauthorized action.');
+        // Inline role check
+        if (auth()->user()->role !== 'tutor' || $service->tutor_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
         }
 
         $validated = $request->validate([
@@ -113,5 +114,17 @@ class ServiceController extends Controller
             ->with('success', 'Service updated successfully.');
     }
 
+    public function destroy(Service $service)
+    {
+        // Inline role check
+        if (auth()->user()->role !== 'tutor' || $service->tutor_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $service->delete();
+
+        return redirect()->route('services.manage')
+            ->with('success', 'Service deleted successfully.');
+    }
 }
 

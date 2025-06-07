@@ -13,13 +13,13 @@ class ContentController extends Controller
     public function index()
     {
         $contents = Content::latest()->paginate(20);
-        return view('Admin.contents.index', compact('contents'));
+        return view('admin.contents.index', compact('contents'));
     }
 
     // Show create form
     public function create()
     {
-        return view('Admin.contents.create');
+        return view('admin.contents.create');
     }
 
     // Store new content
@@ -27,16 +27,20 @@ class ContentController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'body' => 'required|string',
+            'type' => 'required|string',
+            'order' => 'nullable|integer',
+            'content' => 'required|string',
         ]);
+        $validated['is_active'] = $request->has('is_active');
+        $validated['body'] = $validated['content'];
         Content::create($validated);
-        return redirect()->route('admin.contents.index')->with('success', 'Content created!');
+        return redirect()->route('admin.contents.index')->with('success', 'Content created successfully!');
     }
 
     // Show edit form
     public function edit(Content $content)
     {
-        return view('Admin.contents.edit', compact('content'));
+        return view('admin.contents.edit', compact('content'));
     }
 
     // Update content
@@ -61,13 +65,13 @@ class ContentController extends Controller
     public function reportedIndex()
     {
         $reports = ReportedContent::with(['content', 'reporter'])->latest()->paginate(20);
-        return view('Admin.contents.reported', compact('reports'));
+        return view('admin.contents.reported', compact('reports'));
     }
 
     // Review a report (show details)
     public function reviewReport(ReportedContent $report)
     {
-        return view('Admin.contents.review_report', compact('report'));
+        return view('admin.contents.review_report', compact('report'));
     }
 
     // Resolve a report

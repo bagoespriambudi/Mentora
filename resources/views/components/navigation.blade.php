@@ -1,10 +1,10 @@
 <?php
 if (!auth()->check() || (auth()->check() && (auth()->user()->role === 'tutee' || auth()->user()->role === 'tutor'))) {
-    $navigation['Browse Tutors'] = route('tutors.index');
-    $navigation['Articles & Tips'] = route('articles.index');
+    // $navigation['Browse Tutors'] = route('tutors.index');
+    // $navigation['Articles & Tips'] = route('articles.index');
 }
 if (auth()->check() && auth()->user()->role === 'tutor') {
-    $navigation['My Sessions'] = route('tutor.sessions');
+    $navigation['My Sessions'] = route('sessions.manage');
 }
 if (auth()->check() && auth()->user()->role === 'tutee') {
     $navigation['My Bookings'] = route('tutee.sessions');
@@ -20,7 +20,7 @@ if (auth()->check() && auth()->user()->role === 'admin') {
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('home') }}" class="text-primary font-bold text-xl">
+                    <a href="{{ route('welcome') }}" class="text-primary font-bold text-xl">
                         Mentora
                     </a>
                 </div>

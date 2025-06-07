@@ -11,10 +11,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             CategorySeeder::class,
-            FaqSeeder::class,
-            GuideSeeder::class,
-            PolicySeeder::class,
+            // FaqSeeder::class,
+            // GuideSeeder::class,
+            // PolicySeeder::class,
         ]);
-        $this->call(ContentSeeder::class);
+        // $this->call(ContentSeeder::class);
+        \App\Models\Content::factory()->count(6)->create([
+            'is_active' => true,
+        ]);
     }
 }

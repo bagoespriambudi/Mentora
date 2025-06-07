@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Service extends Model
+class Session extends Model
 {
     use HasFactory;
+
+    protected $table = 'tutor_sessions';
 
     protected $fillable = [
         'tutor_id',
@@ -18,15 +19,16 @@ class Service extends Model
         'description',
         'price',
         'duration_days',
-        'is_active',
         'thumbnail',
-        'gallery'
+        'gallery',
+        'is_active',
+        'schedule',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'gallery' => 'array'
+        'gallery' => 'array',
+        'schedule' => 'datetime',
     ];
 
     public function tutor(): BelongsTo
@@ -36,11 +38,6 @@ class Service extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
-
-    public function projects(): HasMany
-    {
-        return $this->hasMany(Project::class);
-    }
-}
+} 

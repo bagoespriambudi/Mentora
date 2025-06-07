@@ -9,12 +9,18 @@ use App\Http\Controllers\FinancialController;
 use App\Http\Controllers\TutorDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ContentController;
+use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\SessionController;
+use App\Models\Content;
 
 // Guest landing page
 Route::get('/', function () {
+    $contents = Content::where('is_active', true)->latest()->take(6)->get();
     return auth()->check()
         ? redirect()->route('dashboard')
-        : view('welcome');
+        : view('welcome', compact('contents'));
 })->name('welcome');
 
 // Authentication Routes
@@ -43,7 +49,33 @@ Route::middleware('auth')->group(function () {
 
     // Tutor Dashboard Route
     Route::get('/tutor/dashboard', [TutorDashboardController::class, 'index'])->name('tutor.dashboard');
+
+    // Service Routes
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+
+    // Tutor Service Management
+    Route::get('/services/manage', [ServiceController::class, 'manage'])->name('services.manage');
+    Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
+    Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::put('/services/{service}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // Session Management for Tutors
+    Route::get('/sessions/manage', [SessionController::class, 'index'])->name('sessions.manage');
+    Route::get('/sessions/create', [SessionController::class, 'create'])->name('sessions.create');
+    Route::post('/sessions', [SessionController::class, 'store'])->name('sessions.store');
+    Route::get('/sessions/{session}/edit', [SessionController::class, 'edit'])->name('sessions.edit');
+    Route::put('/sessions/{session}', [SessionController::class, 'update'])->name('sessions.update');
+    Route::delete('/sessions/{session}', [SessionController::class, 'destroy'])->name('sessions.destroy');
 });
+
+// Public Content Routes (accessible to all)
+Route::get('/contents', [ContentController::class, 'index'])->name('contents.index');
+Route::get('/contents/{content}', [ContentController::class, 'show'])->name('contents.show');
+Route::get('/contents/{content}/report', [ContentController::class, 'reportForm'])->name('contents.report');
+Route::post('/contents/{content}/report', [ContentController::class, 'reportSubmit'])->name('contents.report.submit');
 
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -67,6 +99,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Refund Management
     Route::post('/refunds/{refund}/approve', [RefundController::class, 'approve'])->name('refunds.approve');
     Route::post('/refunds/{refund}/reject', [RefundController::class, 'reject'])->name('refunds.reject');
+
+    // Admin Content Management
+    Route::resource('contents', AdminContentController::class);
+    Route::get('reported-contents', [AdminContentController::class, 'reportedIndex'])->name('contents.reported');
+    Route::get('reported-contents/{report}', [AdminContentController::class, 'reviewReport'])->name('contents.review_report');
+    Route::post('reported-contents/{report}/resolve', [AdminContentController::class, 'resolveReport'])->name('contents.resolve_report');
+    Route::post('reported-contents/{report}/reject', [AdminContentController::class, 'rejectReport'])->name('contents.reject_report');
 });
 
 // Tutee Reviews

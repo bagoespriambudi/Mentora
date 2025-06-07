@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('tutor_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('tutor_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
-            $table->bigInteger('price'); // Price in Indonesian Rupiah (Rp)
+            $table->decimal('price', 10, 2);
             $table->integer('duration_days');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
             $table->json('gallery')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->timestamp('schedule')->nullable(); // Session schedule
+            $table->dateTime('schedule')->nullable();
             $table->timestamps();
         });
     }
@@ -34,4 +34,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('tutor_sessions');
     }
-};
+}; 

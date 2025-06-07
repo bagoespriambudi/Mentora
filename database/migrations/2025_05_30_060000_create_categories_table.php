@@ -6,12 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-<<<<<<< HEAD
-    /**
-     * Run the migrations.
-     */
-=======
->>>>>>> origin/Aida
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
@@ -23,18 +17,8 @@ return new class extends Migration
         });
     }
 
-<<<<<<< HEAD
-    /**
-     * Reverse the migrations.
-     */
-=======
->>>>>>> origin/Aida
     public function down(): void
     {
         Schema::dropIfExists('categories');
     }
-<<<<<<< HEAD
 };
-=======
-}; 
->>>>>>> origin/Aida
