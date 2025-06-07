@@ -84,3 +84,5 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserRole::class . ':tutor'
 
 
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+
+Route::get('/services/{service}/order', [OrderController::class, 'create'])->name('orders.create');

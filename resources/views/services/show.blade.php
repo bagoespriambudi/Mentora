@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <div class="text-3xl font-bold text-gray-900">Rp.{{ number_format($service->price, 2) }}</div>
+                                <div class="text-3xl font-bold text-gray-900">Rp {{ number_format($service->price, 0, ',', '.') }}</div>
                             </div>
                         </div>
                     </div>
@@ -132,13 +132,14 @@
                     <!-- Order/Management Card -->
                     <div class="bg-white rounded-lg shadow-sm p-6 sticky top-8">
                         @auth
-                            @if(auth()->user()->role === 'client' && $service->is_active)
+                            @if(auth()->user()->role === 'tutee' && $service->is_active)
+                                <!-- Tutee can order -->
                                 <div class="text-center">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Order This Service</h3>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Order This Session</h3>
                                     <div class="bg-gray-50 rounded-lg p-4 mb-6">
                                         <div class="flex justify-between items-center mb-2">
                                             <span class="text-sm text-gray-600">Price</span>
-                                            <span class="text-lg font-bold text-gray-900">${{ number_format($service->price, 2) }}</span>
+                                            <span class="text-lg font-bold text-gray-900">Rp {{ number_format($service->price, 0, ',', '.') }}</span>
                                         </div>
                                         <div class="flex justify-between items-center mb-2">
                                             <span class="text-sm text-gray-600">Delivery</span>
@@ -147,7 +148,7 @@
                                         <hr class="my-3">
                                         <div class="flex justify-between items-center">
                                             <span class="text-sm font-medium text-gray-900">Total</span>
-                                            <span class="text-xl font-bold text-gray-900">Rp.{{ number_format($service->price, 2) }}</span>
+                                            <span class="text-xl font-bold text-gray-900">Rp {{ number_format($service->price, 0, ',', '.') }}</span>
                                         </div>
                                     </div>
                                     <a href="{{ route('orders.create', $service) }}" 
@@ -158,7 +159,8 @@
                                         Order Now
                                     </a>
                                 </div>
-                            @elseif(auth()->user()->role === 'freelancer' && $service->user_id === auth()->id())
+                            @elseif(auth()->user()->role === 'tutor' && $service->user_id === auth()->id())
+                                <!-- Tutor can edit their own service -->
                                 <div class="text-center">
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Session</h3>
                                     <p class="text-sm text-gray-600 mb-6">This is your session. You can edit the details below.</p>
@@ -170,13 +172,27 @@
                                         Edit Session
                                     </a>
                                 </div>
+                            @elseif(auth()->user()->role === 'tutee' && !$service->is_active)
+                                <!-- Service is inactive -->
+                                <div class="text-center">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Unavailable</h3>
+                                    <p class="text-sm text-gray-600">This session is currently not available for ordering.</p>
+                                </div>
+                            @elseif(auth()->user()->role === 'tutor' && $service->user_id !== auth()->id())
+                                <!-- Tutor viewing other tutor's service -->
+                                <div class="text-center">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Info</h3>
+                                    <p class="text-sm text-gray-600">This session is offered by another tutor.</p>
+                                </div>
                             @else
+                                <!-- Fallback for other scenarios -->
                                 <div class="text-center">
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Unavailable</h3>
                                     <p class="text-sm text-gray-600">This session is currently not available for ordering.</p>
                                 </div>
                             @endif
                         @else
+                            <!-- Not logged in -->
                             <div class="text-center">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Ready to Order?</h3>
                                 <p class="text-sm text-gray-600 mb-6">Login to your account to place an order for this session.</p>
@@ -191,10 +207,8 @@
                         @endauth
                     </div>
 
-                    <!-- Tutor
-                      Info Card -->
+                    <!-- Tutor Info Card -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
-
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">About the Tutor</h3>
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
