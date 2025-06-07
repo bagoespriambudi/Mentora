@@ -6,35 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-<<<<<<< HEAD
     /**
      * Run the migrations.
      */
-=======
->>>>>>> origin/Aida
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('title');
+            $table->text('body')->nullable();
+            $table->integer('order')->nullable();
+            $table->text('content');
+            $table->enum('type', ['faq', 'guide', 'policy']);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
 
-<<<<<<< HEAD
     /**
      * Reverse the migrations.
      */
-=======
->>>>>>> origin/Aida
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('contents');
     }
-<<<<<<< HEAD
 };
-=======
-}; 
->>>>>>> origin/Aida

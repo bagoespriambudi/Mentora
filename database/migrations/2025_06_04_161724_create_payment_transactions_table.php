@@ -16,7 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('tutor_id')->constrained('users')->onDelete('cascade');
             $table->string('session_id')->nullable();
+<<<<<<< HEAD
             $table->foreign('session_id')->references('id')->on('sessions')->onDelete('set null');
+=======
+>>>>>>> origin/Aida
             $table->decimal('amount', 10, 2);
             $table->string('payment_method');
             $table->enum('status', ['pending', 'completed', 'refunded'])->default('pending');

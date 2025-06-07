@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+=======
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+>>>>>>> origin/Aida
 
 class Category extends Model
 {
@@ -13,6 +18,7 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
+<<<<<<< HEAD
         'is_active'
     ];
 
@@ -25,3 +31,14 @@ class Category extends Model
         return $this->hasMany(Service::class);
     }
 }
+=======
+        'is_active',
+    ];
+
+    // Placeholder for services relationship
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+} 
+>>>>>>> origin/Aida
