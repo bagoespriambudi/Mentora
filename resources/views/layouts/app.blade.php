@@ -37,10 +37,25 @@
                     </header>
                 @endisset
 
-                <!-- Page Content -->
-                <main>
-                    @yield('content')
-                </main>
+              <!-- Page Content -->
+<main>
+    {{-- Flash Messages --}}
+    <div class="max-w-4xl mx-auto mt-6 px-4">
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-4 p-4 bg-red-100 text-red-800 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
+
+    @yield('content')
+</main>
             </div>
         </div>
         @stack('scripts')

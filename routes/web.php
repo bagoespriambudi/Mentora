@@ -90,9 +90,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 });
 
 // Order Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::middleware(['auth'])->group(function () { 
+       
+    Route::resource('orders', OrderController::class);
     Route::get('/services/{service}/order', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/services/{service}/order', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class,'show'])->name('orders.show');
+    Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
 });
 
