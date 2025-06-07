@@ -196,12 +196,27 @@
             font-size: 1.1rem;
             border-radius: 15px;
         }
+        /* Section styling */
+        .section {
+            margin: 4rem 0;
+        }
+        .section-title {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #fff, #e2e8f0, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         /* Features section */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin: 4rem 0;
+            justify-items: center;
         }
         .feature-card {
             background: rgba(255, 255, 255, 0.05);
@@ -212,6 +227,9 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
         }
         .feature-card::before {
             content: '';
@@ -239,7 +257,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
+            margin: 0 auto 1.5rem auto;
             font-size: 1.5rem;
             position: relative;
             z-index: 1;
@@ -257,6 +275,71 @@
             line-height: 1.6;
             position: relative;
             z-index: 1;
+            margin-bottom: 1rem;
+        }
+        /* Content preview specific styling */
+        .content-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+            align-items: stretch;
+        }
+        .content-preview-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .content-preview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .content-preview-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .content-preview-card:hover::before {
+            opacity: 1;
+        }
+        .content-preview-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+        .content-preview-desc {
+            color: #cbd5e1;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+        .content-preview-btn {
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
+            align-self: flex-start;
         }
         /* Stats section */
         .stats {
@@ -323,7 +406,7 @@
                 width: 100%;
                 max-width: 300px;
             }
-            .features {
+            .features, .content-preview-grid {
                 grid-template-columns: 1fr;
             }
             .stats {
@@ -338,7 +421,7 @@
             .hero-subtitle {
                 font-size: 1.1rem;
             }
-            .feature-card {
+            .feature-card, .content-preview-card {
                 padding: 1.5rem;
             }
         }
@@ -360,8 +443,8 @@
                 <span>Mentora</span>
             </div>
             <div class="nav-buttons">
-                <a href="{{ route('login') }}" class="btn btn-secondary">Sign In</a>
-                <a href="{{ route('register') }}" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-secondary">Sign In</a>
+                <a href="#" class="btn btn-primary">Get Started</a>
             </div>
         </div>
     </header>
@@ -381,12 +464,34 @@
                     Mentora is Telkom University's premier platform connecting talented students with those seeking expertise. Whether you're looking to teach, learn, or hire freelance services—we've got you covered.
                 </p>
                 <div class="cta-buttons">
-                    <a href="{{ route('register') }}" class="btn btn-primary btn-hero">
+                    <a href="#" class="btn btn-primary btn-hero">
                         🚀 Join as Student
                     </a>
-                    <a href="{{ route('register') }}" class="btn btn-secondary btn-hero">
+                    <a href="#" class="btn btn-secondary btn-hero">
                         💼 Become a Tutor
                     </a>
+                </div>
+            </section>
+
+            <!-- Content Previews -->
+            <section class="section">
+                <h2 class="section-title">Latest Content</h2>
+                <div class="content-preview-grid">
+                    <div class="content-preview-card">
+                        <div class="content-preview-title">Getting Started with React Hooks</div>
+                        <div class="content-preview-desc">Learn the fundamentals of React Hooks and how to use useState, useEffect, and custom hooks in your applications...</div>
+                        <a href="#" class="btn btn-secondary content-preview-btn">Read More</a>
+                    </div>
+                    <div class="content-preview-card">
+                        <div class="content-preview-title">Mastering Data Structures</div>
+                        <div class="content-preview-desc">A comprehensive guide to understanding arrays, linked lists, stacks, queues, and trees for better algorithm implementation...</div>
+                        <a href="#" class="btn btn-secondary content-preview-btn">Read More</a>
+                    </div>
+                    <div class="content-preview-card">
+                        <div class="content-preview-title">UI/UX Design Principles</div>
+                        <div class="content-preview-desc">Discover the essential principles of user interface and user experience design to create intuitive and engaging applications...</div>
+                        <a href="#" class="btn btn-secondary content-preview-btn">Read More</a>
+                    </div>
                 </div>
             </section>
 
@@ -417,53 +522,56 @@
             </section>
 
             <!-- Features -->
-            <section class="features">
-                <div class="feature-card">
-                    <div class="feature-icon">🎓</div>
-                    <h3 class="feature-title">Expert Tutoring</h3>
-                    <p class="feature-desc">
-                        Get personalized tutoring from top-performing Telkom University students across various subjects including Programming, Mathematics, Design, and more.
-                    </p>
-                </div>
+            <section class="section">
+                <h2 class="section-title">Why Choose Mentora?</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h3 class="feature-title">Expert Tutoring</h3>
+                        <p class="feature-desc">
+                            Get personalized tutoring from top-performing Telkom University students across various subjects including Programming, Mathematics, Design, and more.
+                        </p>
+                    </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">💼</div>
-                    <h3 class="feature-title">Freelance Services</h3>
-                    <p class="feature-desc">
-                        Access a wide range of professional services from talented peers—from web development and graphic design to content writing and academic assistance.
-                    </p>
-                </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💼</div>
+                        <h3 class="feature-title">Freelance Services</h3>
+                        <p class="feature-desc">
+                            Access a wide range of professional services from talented peers—from web development and graphic design to content writing and academic assistance.
+                        </p>
+                    </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3 class="feature-title">Secure & Verified</h3>
-                    <p class="feature-desc">
-                        All tutors and freelancers are verified Telkom University students. Our admin moderation ensures quality and safety for all transactions.
-                    </p>
-                </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">Secure & Verified</h3>
+                        <p class="feature-desc">
+                            All tutors and freelancers are verified Telkom University students. Our admin moderation ensures quality and safety for all transactions.
+                        </p>
+                    </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">⭐</div>
-                    <h3 class="feature-title">Review System</h3>
-                    <p class="feature-desc">
-                        Transparent rating and review system helps you make informed decisions and ensures continuous quality improvement.
-                    </p>
-                </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⭐</div>
+                        <h3 class="feature-title">Review System</h3>
+                        <p class="feature-desc">
+                            Transparent rating and review system helps you make informed decisions and ensures continuous quality improvement.
+                        </p>
+                    </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h3 class="feature-title">Fair Pricing</h3>
-                    <p class="feature-desc">
-                        Competitive and student-friendly pricing with secure payment processing and transaction history tracking.
-                    </p>
-                </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3 class="feature-title">Fair Pricing</h3>
+                        <p class="feature-desc">
+                            Competitive and student-friendly pricing with secure payment processing and transaction history tracking.
+                        </p>
+                    </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">📚</div>
-                    <h3 class="feature-title">Learning Resources</h3>
-                    <p class="feature-desc">
-                        Access curated articles, tips, and educational content to support your academic and professional development journey.
-                    </p>
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3 class="feature-title">Learning Resources</h3>
+                        <p class="feature-desc">
+                            Access curated articles, tips, and educational content to support your academic and professional development journey.
+                        </p>
+                    </div>
                 </div>
             </section>
 
@@ -476,10 +584,10 @@
                     Join thousands of Telkom University students already using Mentora to learn, teach, and grow.
                 </p>
                 <div class="cta-buttons">
-                    <a href="{{ route('register') }}" class="btn btn-primary btn-hero">
+                    <a href="#" class="btn btn-primary btn-hero">
                         Create Account
                     </a>
-                    <a href="{{ route('login') }}" class="btn btn-secondary btn-hero">
+                    <a href="#" class="btn btn-secondary btn-hero">
                         Sign In
                     </a>
                 </div>

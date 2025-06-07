@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->text('body')->nullable();
+            $table->integer('order')->nullable();
             $table->text('content');
             $table->enum('type', ['faq', 'guide', 'policy']);
             $table->boolean('is_active')->default(true);

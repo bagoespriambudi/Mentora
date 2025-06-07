@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
             GuideSeeder::class,
             PolicySeeder::class,
         ]);
+        $this->call(ContentSeeder::class);
     }
 }

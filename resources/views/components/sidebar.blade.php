@@ -71,6 +71,45 @@
                 <span class="font-medium">Profile</span>
             </a>
         </div>
+
+        @if(auth()->user()->role === 'tutee')
+            <a href="{{ route('tutee.reviews.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('tutee.reviews.index') ? 'bg-gradient-to-r from-yellow-600 to-yellow-500 text-white shadow-lg shadow-yellow-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('tutee.reviews.index') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-yellow-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 15l-3.5 2.1.7-4.1-3-2.9 4.2-.6L10 6l1.6 3.5 4.2.6-3 2.9.7 4.1z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">My Reviews</span>
+            </a>
+        @endif
+        @if(auth()->user()->role === 'tutor')
+            <a href="{{ route('tutor.reviews.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Ratings</a>
+        @endif
+        @if(auth()->user()->role === 'admin')
+            <a href="{{ route('admin.reviews.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.reviews.index') ? 'bg-gradient-to-r from-yellow-600 to-yellow-500 text-white shadow-lg shadow-yellow-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('admin.reviews.index') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-yellow-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 15l-3.5 2.1.7-4.1-3-2.9 4.2-.6L10 6l1.6 3.5 4.2.6-3 2.9.7 4.1z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Monitor Reviews</span>
+            </a>
+        @endif
+
+        <!-- Content Section -->
+        <div class="pt-6">
+            <div class="flex items-center px-4 mb-3">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Content</span>
+            </div>
+            <a href="{{ route('contents.index') }}" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('contents.index') ? 'bg-gradient-to-r from-yellow-600 to-yellow-500 text-white shadow-lg shadow-yellow-500/25' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg {{ request()->routeIs('contents.index') ? 'bg-white/20' : 'bg-slate-700/50 group-hover:bg-yellow-600/50' }}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 4h12v12H4z"/>
+                    </svg>
+                </div>
+                <span class="font-medium">Contents</span>
+            </a>
+        </div>
     </nav>
 
     <!-- User Section & Logout -->
