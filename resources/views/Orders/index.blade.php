@@ -118,7 +118,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-3">No Orders Yet</h3>
                     <p class="text-gray-600 mb-6">You haven't placed any orders yet. Start exploring our services to place your first order!</p>
-                    <a href="{{ route('services.index') ?? '#' }}" 
+                    <a href="{{ route('orders.index') ?? '#' }}" 
                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
                         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
