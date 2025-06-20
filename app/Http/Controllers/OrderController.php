@@ -81,7 +81,7 @@ class OrderController extends Controller
         if ($order->client_id != auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
-
+        
         // Pastikan order masih bisa diedit (pending dan belum dibayar)
         if ($order->status !== 'pending' || $order->isPaid()) {
             return redirect()->route('orders.show', $order)->with('error', 'This order cannot be edited.');
@@ -121,7 +121,7 @@ class OrderController extends Controller
         if ($order->client_id != auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
-
+        
         // Pastikan order bisa dibatalkan (pending dan belum dibayar)
         if ($order->status !== 'pending' || $order->isPaid()) {
             return redirect()->route('orders.show', $order)->with('error', 'This order cannot be cancelled.');

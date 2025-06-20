@@ -73,7 +73,7 @@
                                     <div class="flex justify-between items-start">
                                         <div class="flex-1">
                                             <h4 class="font-medium text-gray-900">{{ $order->service->title }}</h4>
-                                            <p class="text-sm text-gray-600">Order #{{ $order->id }} • {{ $order->order_date->format('M d, Y') }}</p>
+                                            <p class="text-sm text-gray-600">Order #{{ $order->id }} • {{ $order->created_at->format('M d, Y') }}</p>
                                             <div class="flex items-center space-x-4 mt-2">
                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
                                                     @if($order->status === 'pending') bg-yellow-100 text-yellow-800

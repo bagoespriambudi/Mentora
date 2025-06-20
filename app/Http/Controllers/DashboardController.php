@@ -47,7 +47,7 @@ class DashboardController extends Controller
         $orders = Order::where('client_id', $user->id)->with(['service', 'payments']);
         $totalOrders = $orders->count();
         $pendingOrders = $orders->where('status', 'pending')->count();
-        $recentOrders = $orders->latest('order_date')->take(3)->get();
+        $recentOrders = $orders->latest('created_at')->take(3)->get();
         $unpaidOrders = $orders->get()->filter(function ($order) {
             return !$order->isPaid() && !$order->hasPendingPayment() && $order->status !== 'cancelled';
         });

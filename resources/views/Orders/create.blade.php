@@ -8,15 +8,15 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Back Navigation -->
-            <div class="mb-6">
+        <div class="mb-6">
                 <a href="{{ route('services.show', $service) }}" 
                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
+                </svg>
                     Back to Service
-                </a>
-            </div>
+            </a>
+        </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
@@ -60,19 +60,19 @@
                                                 <div class="flex items-center">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                    </svg>
+                    </svg>
                                                     {{ $service->duration_days }} days delivery
-                                                </div>
+                </div>
                                                 <div class="flex items-center">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                                    </svg>
+                            </svg>
                                                     Rp {{ number_format($service->price, 0, ',', '.') }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
                                 <!-- Order Notes -->
                                 <div>
@@ -91,7 +91,7 @@
                                         Let the tutor know about any specific requirements, deadlines, or preferences you have for this service.
                                     </p>
                                 </div>
-
+                        
                                 <!-- Terms and Conditions -->
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                     <div class="flex">
@@ -111,9 +111,9 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
+                        </div>
+                    </div>
+                    
                                 <!-- Submit Buttons -->
                                 <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
                                     <a href="{{ route('services.show', $service) }}" 
@@ -127,11 +127,11 @@
                                         </svg>
                                         Place Order
                                     </button>
-                                </div>
+                            </div>
                             </form>
-                        </div>
                     </div>
                 </div>
+            </div>
 
                 <!-- Sidebar -->
                 <div class="space-y-6">
@@ -198,7 +198,7 @@
                                     <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                                         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                        </svg>
+                            </svg>
                                     </div>
                                 </div>
                                 <div>
@@ -220,7 +220,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>

@@ -29,17 +29,17 @@
                     @endif
 
                     <form action="{{ route('orders.update', $order) }}" method="POST" class="space-y-6">
-                        @csrf
-                        @method('PUT')
-
+                    @csrf
+                    @method('PUT')
+                    
                         <!-- Order Notes (Editable) -->
                         <div>
                             <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
                                 Order Notes
                             </label>
                             <textarea id="notes" 
-                                      name="notes" 
-                                      rows="6" 
+                                    name="notes" 
+                                    rows="6"
                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                       placeholder="Any specific requirements or instructions for the tutor...">{{ old('notes', $order->notes) }}</textarea>
                             @error('notes')
@@ -52,14 +52,14 @@
                             <a href="{{ route('orders.show', $order) }}" 
                                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                 Cancel
-                            </a>
+                        </a>
                             <button type="submit" 
                                     class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                Update Order
-                            </button>
-                        </div>
+                            Update Order
+                        </button>
+                    </div>
                     </form>
-                </div>
+                    </div>
             </div>
         </div>
     </div>

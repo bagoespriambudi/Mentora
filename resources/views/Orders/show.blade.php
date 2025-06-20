@@ -36,22 +36,22 @@
                                     @endif">
                                     {{ ucfirst($order->status) }}
                                 </span>
-                            </div>
-
+    </div>
+    
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Order ID</dt>
                                     <dd class="mt-1 text-sm text-gray-900">#{{ $order->id }}</dd>
                                 </div>
-                                <div>
+            <div>
                                     <dt class="text-sm font-medium text-gray-500">Order Date</dt>
                                     <dd class="mt-1 text-sm text-gray-900">{{ $order->order_date->format('F j, Y \a\t g:i A') }}</dd>
-                                </div>
-                                <div>
+            </div>
+            <div>
                                     <dt class="text-sm font-medium text-gray-500">Total Amount</dt>
                                     <dd class="mt-1 text-lg font-semibold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</dd>
-                                </div>
-                                <div>
+            </div>
+            <div>
                                     <dt class="text-sm font-medium text-gray-500">Payment Status</dt>
                                     <dd class="mt-1">
                                         @if($order->isPaid())
@@ -116,10 +116,10 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
+            </div>
+        </div>
+    </div>
+    
                     <!-- Payment History -->
                     @if($order->payments->count() > 0)
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -157,7 +157,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                        </div>
+    </div>
                     @endif
                 </div>
 
@@ -187,8 +187,8 @@
                                         </svg>
                                         Edit Order
                                     </a>
-                                @endif
-                                
+    @endif
+    
                                 <a href="{{ route('services.show', $order->service) }}" 
                                    class="w-full inline-flex items-center justify-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,8 +200,8 @@
                                 
                                 @if($order->status === 'pending' && !$order->isPaid())
                                     <form action="{{ route('orders.destroy', $order) }}" method="POST" class="w-full">
-                                        @csrf
-                                        @method('DELETE')
+            @csrf
+            @method('DELETE')
                                         <button type="submit" 
                                                 class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200"
                                                 onclick="return confirm('Are you sure you want to cancel this order?')">
@@ -210,7 +210,7 @@
                                             </svg>
                                             Cancel Order
                                         </button>
-                                    </form>
+        </form>
                                 @endif
                             </div>
                         </div>
