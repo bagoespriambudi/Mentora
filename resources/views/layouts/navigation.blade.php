@@ -20,6 +20,10 @@
                         {{ __('Services') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('currency.converter')" :active="request()->routeIs('currency.*')">
+                        {{ __('Currency Converter') }}
+                    </x-nav-link>
+
                     @auth
                         @if(auth()->user()->role === 'tutee')
                             <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
@@ -89,6 +93,10 @@
             
             <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">
                 {{ __('Services') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('currency.converter')" :active="request()->routeIs('currency.*')">
+                {{ __('Currency Converter') }}
             </x-responsive-nav-link>
 
             @auth

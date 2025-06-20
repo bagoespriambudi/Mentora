@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\SessionController;
 use App\Models\Content;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CurrencyController;
 
 // Guest landing page
 Route::get('/', function () {
@@ -119,9 +120,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Admin Financial Routes (commented out until views are created)
-    // Route::get('/financial', [App\Http\Controllers\Admin\FinancialController::class, 'index'])->name('financial.index');
-    // Route::post('/financial/report', [App\Http\Controllers\Admin\FinancialController::class, 'generateReport'])->name('financial.report');
-    // Route::get('/financial/report/{report}/export', [App\Http\Controllers\Admin\FinancialController::class, 'exportReport'])->name('financial.export');
+    Route::get('/financial', [App\Http\Controllers\Admin\FinancialController::class, 'index'])->name('financial.index');
+    Route::post('/financial/report', [App\Http\Controllers\Admin\FinancialController::class, 'generateReport'])->name('financial.report');
+    Route::get('/financial/report/{report}/export', [App\Http\Controllers\Admin\FinancialController::class, 'exportReport'])->name('financial.export');
     
     // Refund Management
     Route::post('/refunds/{refund}/approve', [RefundController::class, 'approve'])->name('refunds.approve');
@@ -154,4 +155,17 @@ Route::middleware(['auth'])->prefix('tutor')->name('tutor.')->group(function () 
 // Admin Review Monitor
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('reviews', [\App\Http\Controllers\Admin\ReviewMonitorController::class, 'index'])->name('reviews.index');
+});
+
+// Currency conversion route for AJAX
+Route::post('/currency/convert', [CurrencyController::class, 'ajaxConvert'])->name('currency.convert');
+
+// Currency Exchange Web Routes
+Route::get('/currency-converter', [CurrencyController::class, 'index'])->name('currency.converter');
+
+// Admin Currency Management
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/currencies', [CurrencyController::class, 'adminIndex'])->name('currencies.index');
+    Route::patch('/currencies/{currency}/toggle', [CurrencyController::class, 'toggleStatus'])->name('currencies.toggle');
+    Route::post('/currencies/update-rates', [CurrencyController::class, 'updateRates'])->name('currencies.update-rates');
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\CurrencyExchangeService;
 
 class Order extends Model
 {
@@ -61,5 +62,52 @@ class Order extends Model
     public function hasPendingPayment()
     {
         return $this->payments()->where('status', 'pending')->exists();
+    }
+
+    // Currency-related methods
+    public function getPriceInCurrency(string $currencyCode)
+    {
+        if ($currencyCode === 'IDR') {
+            return $this->total_price; // Assuming orders are stored in IDR
+        }
+
+        $currencyService = app(CurrencyExchangeService::class);
+        $conversion = $currencyService->convert($this->total_price, 'IDR', $currencyCode);
+        
+        return $conversion ? $conversion['converted_amount'] : null;
+    }
+
+    public function getFormattedPrice(string $currencyCode = 'IDR')
+    {
+        $amount = $this->getPriceInCurrency($currencyCode);
+        if ($amount === null) {
+            return 'N/A';
+        }
+
+        $currency = Currency::where('code', $currencyCode)->first();
+        if ($currency) {
+            return $currency->formatAmount($amount);
+        }
+
+        return $currencyCode . ' ' . number_format($amount, 2);
+    }
+
+    public function getPopularCurrencyPrices()
+    {
+        $popularCurrencies = ['USD', 'EUR', 'SGD', 'MYR'];
+        $prices = [];
+        
+        foreach ($popularCurrencies as $currencyCode) {
+            $price = $this->getPriceInCurrency($currencyCode);
+            if ($price !== null) {
+                $currency = Currency::where('code', $currencyCode)->first();
+                $prices[$currencyCode] = [
+                    'amount' => $price,
+                    'formatted' => $currency ? $currency->formatAmount($price) : ($currencyCode . ' ' . number_format($price, 2))
+                ];
+            }
+        }
+        
+        return $prices;
     }
 }
