@@ -4,110 +4,86 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Services\CurrencyExchangeService;
 
 class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'service_id',
         'client_id',
+        'service_id',
+        'total_price',
         'status',
         'notes',
-        'order_date',
-        'total_price'
+        'additional_requirements'
     ];
 
     protected $casts = [
-        'order_date' => 'datetime',
         'total_price' => 'decimal:2'
     ];
+
+    // Relationships
+    public function client()
+    {
+        return $this->belongsTo(User::class, 'client_id');
+    }
 
     public function service()
     {
         return $this->belongsTo(Service::class);
     }
 
-    public function client()
-    {
-        return $this->belongsTo(User::class, 'client_id');
-    }
-
-    // Add relationship to payments
     public function payments()
     {
-        return $this->hasMany(PaymentTransaction::class, 'order_id');
+        return $this->hasMany(PaymentTransaction::class);
     }
 
-    // Get the latest payment for this order
     public function latestPayment()
     {
-        return $this->hasOne(PaymentTransaction::class, 'order_id')->latest();
+        return $this->hasOne(PaymentTransaction::class)->latestOfMany();
     }
 
-    // Check if order is paid
+    // Status methods
     public function isPaid()
     {
         return $this->payments()->where('status', 'completed')->exists();
     }
 
-    // Get total paid amount
-    public function getTotalPaidAmount()
-    {
-        return $this->payments()->where('status', 'completed')->sum('amount');
-    }
-
-    // Check if order has pending payment
     public function hasPendingPayment()
     {
         return $this->payments()->where('status', 'pending')->exists();
     }
 
-    // Currency-related methods
-    public function getPriceInCurrency(string $currencyCode)
+    public function getTotalPaidAmount()
     {
-        if ($currencyCode === 'IDR') {
-            return $this->total_price; // Assuming orders are stored in IDR
-        }
-
-        $currencyService = app(CurrencyExchangeService::class);
-        $conversion = $currencyService->convert($this->total_price, 'IDR', $currencyCode);
-        
-        return $conversion ? $conversion['converted_amount'] : null;
+        return $this->payments()->where('status', 'completed')->sum('amount');
     }
 
-    public function getFormattedPrice(string $currencyCode = 'IDR')
+    // Scopes
+    public function scopePending($query)
     {
-        $amount = $this->getPriceInCurrency($currencyCode);
-        if ($amount === null) {
-            return 'N/A';
-        }
-
-        $currency = Currency::where('code', $currencyCode)->first();
-        if ($currency) {
-            return $currency->formatAmount($amount);
-        }
-
-        return $currencyCode . ' ' . number_format($amount, 2);
+        return $query->where('status', 'pending');
     }
 
-    public function getPopularCurrencyPrices()
+    public function scopeCompleted($query)
     {
-        $popularCurrencies = ['USD', 'EUR', 'SGD', 'MYR'];
-        $prices = [];
-        
-        foreach ($popularCurrencies as $currencyCode) {
-            $price = $this->getPriceInCurrency($currencyCode);
-            if ($price !== null) {
-                $currency = Currency::where('code', $currencyCode)->first();
-                $prices[$currencyCode] = [
-                    'amount' => $price,
-                    'formatted' => $currency ? $currency->formatAmount($price) : ($currencyCode . ' ' . number_format($price, 2))
-                ];
-            }
-        }
-        
-        return $prices;
+        return $query->where('status', 'completed');
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', 'cancelled');
+    }
+
+    // Helper methods
+    public function getStatusColorAttribute()
+    {
+        return match($this->status) {
+            'pending' => 'yellow',
+            'confirmed' => 'blue',
+            'completed' => 'green',
+            'cancelled' => 'red',
+            default => 'gray'
+        };
     }
 }

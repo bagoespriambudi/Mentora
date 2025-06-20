@@ -6,23 +6,17 @@ use App\Models\PaymentTransaction;
 use App\Models\Booking;
 use App\Models\Order;
 use App\Models\Currency;
-use App\Services\CurrencyExchangeService;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
-    private CurrencyExchangeService $currencyService;
-
-    public function __construct(CurrencyExchangeService $currencyService)
-    {
-        $this->currencyService = $currencyService;
-    }
-
     public function index()
     {
         $transactions = PaymentTransaction::where('user_id', Auth::id())
-            ->with(['tutor', 'session', 'order.service', 'currency'])
+            ->with(['tutor', 'session', 'order.service'])
             ->latest()
             ->paginate(10);
 
@@ -31,8 +25,10 @@ class PaymentController extends Controller
 
     public function create()
     {
-        $currencies = Currency::active()->orderBy('name')->get();
-        return view('payments.create', compact('currencies'));
+        $tutors = User::where('role', 'tutor')->get();
+        $currencies = Currency::where('is_active', true)->get();
+        
+        return view('payments.create', compact('tutors', 'currencies'));
     }
 
     // New method for creating payment from order
@@ -52,8 +48,8 @@ class PaymentController extends Controller
         $order->load(['service.tutor', 'service.category']);
         
         // Get available currencies for payment
-        $currencies = Currency::active()->orderBy('name')->get();
-        $baseCurrency = Currency::getBaseCurrency();
+        $currencies = Currency::where('is_active', true)->orderBy('name')->get();
+        $baseCurrency = Currency::where('is_base_currency', true)->first();
 
         return view('payments.create-from-order', compact('order', 'currencies', 'baseCurrency'));
     }
@@ -61,69 +57,34 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'amount' => 'required|numeric|min:0',
+            'tutor_id' => 'required|exists:users,id',
+            'amount' => 'required|numeric|min:1',
             'currency' => 'required|string|size:3|exists:currencies,code',
             'payment_method' => 'required|string',
-            'payment_proof' => 'nullable|image|max:2048'
+            'payment_proof' => 'nullable|image|max:2048',
+            'notes' => 'nullable|string'
         ]);
 
-        $user = Auth::user();
-        // Find outstanding bookings for this tutee and link them to this payment
-        $outstandingBookings = Booking::where('tutee_id', $user->id)
-            ->whereNull('payment_id')
-            ->whereNotIn('status', ['cancelled', 'completed'])
-            ->with('session')
-            ->get();
-
-        if ($outstandingBookings->isEmpty()) {
-            return redirect()->route('payments.create')->with('error', 'No outstanding bookings to pay for.');
-        }
-
-        // Use the tutor_id from the first outstanding booking's session
-        $firstBooking = $outstandingBookings->first();
-        $session = $firstBooking->session;
-        if (!$session) {
-            return redirect()->route('payments.create')->with('error', 'Booking session not found.');
-        }
-
-        // Get currency conversion data
-        $currency = Currency::where('code', $validated['currency'])->first();
-        $conversion = null;
-        
-        if ($validated['currency'] !== 'USD') {
-            $conversion = $this->currencyService->convert(
-                $validated['amount'], 
-                $validated['currency'], 
-                'USD'
-            );
-        }
-
-        $validated['tutor_id'] = $session->tutor_id;
-        $validated['user_id'] = $user->id;
-        $validated['status'] = 'pending';
-        $validated['transaction_date'] = now();
-        
-        // Add currency data
-        if ($conversion) {
-            $validated['amount_usd'] = $conversion['converted_amount'];
-            $validated['exchange_rate'] = $conversion['exchange_rate'];
-        } else {
-            $validated['amount_usd'] = $validated['amount'];
-            $validated['exchange_rate'] = 1.000000;
-        }
-
+        // Handle file upload
         if ($request->hasFile('payment_proof')) {
-            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
-            $validated['payment_proof'] = $path;
+            $validated['payment_proof'] = $request->file('payment_proof')->store('payment-proofs', 'public');
         }
 
-        $payment = PaymentTransaction::create($validated);
+        // Get currency for USD conversion (static rate)
+        $currency = Currency::where('code', $validated['currency'])->first();
+        $usdAmount = $validated['amount'] / ($currency->rate_to_usd ?? 1);
 
-        foreach ($outstandingBookings as $booking) {
-            $booking->update(['payment_id' => $payment->id]);
-        }
+        $paymentData = array_merge($validated, [
+            'user_id' => Auth::id(),
+            'amount_usd' => $usdAmount,
+            'exchange_rate' => $currency->rate_to_usd ?? 1,
+            'status' => 'pending',
+            'transaction_date' => now()
+        ]);
 
-        return redirect()->route('payments.show', $payment)->with('success', 'Payment created successfully.');
+        $payment = PaymentTransaction::create($paymentData);
+
+        return redirect()->route('payments.index')->with('success', 'Payment submitted successfully!');
     }
 
     // New method for storing payment from order with currency conversion
@@ -145,25 +106,33 @@ class PaymentController extends Controller
             'payment_proof' => 'nullable|image|max:2048'
         ]);
 
-        // Convert order price to selected currency
+        // Get order price and convert to selected currency using static rates
         $orderAmountIDR = $order->total_price; // Assuming order price is in IDR
         $selectedCurrency = $validated['currency'];
         
-        $conversion = null;
+        $paymentAmount = $orderAmountIDR;
+        $exchangeRate = 1.000000;
+        
         if ($selectedCurrency !== 'IDR') {
-            $conversion = $this->currencyService->convert($orderAmountIDR, 'IDR', $selectedCurrency);
-            if (!$conversion) {
-                return redirect()->back()->with('error', 'Currency conversion failed. Please try again.');
+            $currency = Currency::where('code', $selectedCurrency)->first();
+            if ($currency && $currency->rate_to_usd) {
+                // Convert IDR to selected currency via USD
+                $idrCurrency = Currency::where('code', 'IDR')->first();
+                if ($idrCurrency && $idrCurrency->rate_to_usd) {
+                    $usdAmount = $orderAmountIDR / $idrCurrency->rate_to_usd;
+                    $paymentAmount = $usdAmount * $currency->rate_to_usd;
+                    $exchangeRate = $paymentAmount / $orderAmountIDR;
+                }
             }
-            $paymentAmount = $conversion['converted_amount'];
-        } else {
-            $paymentAmount = $orderAmountIDR;
         }
 
         // Get USD conversion for reference
-        $usdConversion = null;
+        $usdAmount = $paymentAmount;
         if ($selectedCurrency !== 'USD') {
-            $usdConversion = $this->currencyService->convert($paymentAmount, $selectedCurrency, 'USD');
+            $currency = Currency::where('code', $selectedCurrency)->first();
+            if ($currency && $currency->rate_to_usd) {
+                $usdAmount = $paymentAmount / $currency->rate_to_usd;
+            }
         }
 
         $paymentData = [
@@ -172,8 +141,8 @@ class PaymentController extends Controller
             'order_id' => $order->id,
             'amount' => $paymentAmount,
             'currency' => $selectedCurrency,
-            'amount_usd' => $usdConversion ? $usdConversion['converted_amount'] : $paymentAmount,
-            'exchange_rate' => $conversion ? $conversion['exchange_rate'] : 1.000000,
+            'amount_usd' => $usdAmount,
+            'exchange_rate' => $exchangeRate,
             'payment_method' => $validated['payment_method'],
             'status' => 'pending',
             'transaction_date' => now()
@@ -188,7 +157,7 @@ class PaymentController extends Controller
 
         return redirect()->route('orders.show', $order)->with('success', 
             "Payment submitted successfully in {$selectedCurrency}! Amount: " . 
-            Currency::where('code', $selectedCurrency)->first()->formatAmount($paymentAmount) . 
+            number_format($paymentAmount, 2) . 
             ". Waiting for tutor confirmation."
         );
     }
@@ -196,26 +165,9 @@ class PaymentController extends Controller
     public function show(PaymentTransaction $payment)
     {
         // Load relasi yang diperlukan
-        $payment->load(['tutor', 'session', 'order.service', 'currency']);
+        $payment->load(['tutor', 'session', 'order.service']);
         
-        // Get conversion data for display
-        $conversions = [];
-        $popularCurrencies = ['USD', 'EUR', 'SGD', 'MYR'];
-        
-        foreach ($popularCurrencies as $currencyCode) {
-            if ($currencyCode !== $payment->currency) {
-                $convertedAmount = $payment->convertTo($currencyCode);
-                if ($convertedAmount) {
-                    $currency = Currency::where('code', $currencyCode)->first();
-                    $conversions[$currencyCode] = [
-                        'amount' => $convertedAmount,
-                        'formatted' => $currency ? $currency->formatAmount($convertedAmount) : $convertedAmount
-                    ];
-                }
-            }
-        }
-        
-        return view('payments.show', compact('payment', 'conversions'));
+        return view('payments.show', compact('payment'));
     }
 
     public function update(Request $request, PaymentTransaction $payment)
@@ -225,34 +177,9 @@ class PaymentController extends Controller
         }
         
         $validated = $request->validate([
-            'currency' => 'sometimes|string|size:3|exists:currencies,code',
             'payment_method' => 'required|string',
             'payment_proof' => 'nullable|image|max:2048'
         ]);
-
-        // If currency is being updated, recalculate conversions
-        if (isset($validated['currency']) && $validated['currency'] !== $payment->currency) {
-            $conversion = $this->currencyService->convert(
-                $payment->amount, 
-                $payment->currency, 
-                $validated['currency']
-            );
-            
-            if ($conversion) {
-                $validated['amount'] = $conversion['converted_amount'];
-                $validated['exchange_rate'] = $conversion['exchange_rate'];
-                
-                // Update USD amount
-                $usdConversion = $this->currencyService->convert(
-                    $validated['amount'], 
-                    $validated['currency'], 
-                    'USD'
-                );
-                if ($usdConversion) {
-                    $validated['amount_usd'] = $usdConversion['converted_amount'];
-                }
-            }
-        }
 
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('payment_proofs', 'public');

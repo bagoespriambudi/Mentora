@@ -4,27 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Currency;
-use App\Services\CurrencyExchangeService;
 use Illuminate\Http\JsonResponse;
 
 class CurrencyController extends Controller
 {
-    private CurrencyExchangeService $currencyService;
-
-    public function __construct(CurrencyExchangeService $currencyService)
-    {
-        $this->currencyService = $currencyService;
-    }
-
     /**
      * Display currency converter page
      */
     public function index()
     {
-        $currencies = Currency::active()->orderBy('name')->get();
-        $baseCurrency = Currency::getBaseCurrency();
-        
-        return view('currency.index', compact('currencies', 'baseCurrency'));
+        $currencies = Currency::where('is_active', true)->orderBy('name')->get();
+        return view('currency.index', compact('currencies'));
     }
 
     /**
@@ -38,22 +28,39 @@ class CurrencyController extends Controller
             'to' => 'required|string|size:3'
         ]);
 
-        $conversion = $this->currencyService->convert(
-            $validated['amount'],
-            strtoupper($validated['from']),
-            strtoupper($validated['to'])
-        );
+        $fromCurrency = Currency::where('code', strtoupper($validated['from']))->first();
+        $toCurrency = Currency::where('code', strtoupper($validated['to']))->first();
 
-        if (!$conversion) {
+        if (!$fromCurrency || !$toCurrency) {
             return response()->json([
                 'success' => false,
-                'message' => 'Currency conversion failed. Please check your currency codes.'
+                'message' => 'Currency not found'
             ], 400);
+        }
+
+        // Simple conversion using static rates via USD
+        $amount = $validated['amount'];
+        $convertedAmount = $amount;
+        $exchangeRate = 1;
+
+        if ($validated['from'] !== $validated['to']) {
+            // Convert to USD first, then to target currency
+            $usdAmount = $amount / $fromCurrency->rate_to_usd;
+            $convertedAmount = $usdAmount * $toCurrency->rate_to_usd;
+            $exchangeRate = $convertedAmount / $amount;
         }
 
         return response()->json([
             'success' => true,
-            'data' => $conversion
+            'data' => [
+                'original_amount' => $amount,
+                'converted_amount' => round($convertedAmount, 2),
+                'exchange_rate' => round($exchangeRate, 6),
+                'from_currency' => strtoupper($validated['from']),
+                'to_currency' => strtoupper($validated['to']),
+                'from_symbol' => $fromCurrency->symbol,
+                'to_symbol' => $toCurrency->symbol
+            ]
         ]);
     }
 
@@ -64,20 +71,27 @@ class CurrencyController extends Controller
     {
         $baseCurrency = $request->get('base', 'USD');
         
-        if (!Currency::getByCode($baseCurrency)) {
+        $currency = Currency::where('code', $baseCurrency)->where('is_active', true)->first();
+        if (!$currency) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid base currency'
             ], 400);
         }
 
-        $rates = $this->currencyService->getCurrentRates($baseCurrency);
+        // Return all active currencies with their rates relative to base currency
+        $currencies = Currency::where('is_active', true)->get();
+        $rates = [];
         
-        if (!$rates) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve exchange rates'
-            ], 503);
+        foreach ($currencies as $curr) {
+            if ($curr->code !== $baseCurrency) {
+                // Convert via USD
+                $baseToUsd = 1 / $currency->rate_to_usd;
+                $usdToTarget = $curr->rate_to_usd;
+                $rates[$curr->code] = $baseToUsd * $usdToTarget;
+            } else {
+                $rates[$curr->code] = 1;
+            }
         }
 
         return response()->json([
@@ -95,10 +109,10 @@ class CurrencyController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $currencies = Currency::orderBy('name')->paginate(15);
+        $currencies = Currency::orderBy('name')->get();
         $totalCurrencies = Currency::count();
-        $activeCurrencies = Currency::active()->count();
-        $baseCurrency = Currency::getBaseCurrency();
+        $activeCurrencies = Currency::where('is_active', true)->count();
+        $baseCurrency = Currency::where('is_base_currency', true)->first();
         $lastUpdate = Currency::max('last_updated');
         
         return view('admin.currencies.index', compact('currencies', 'totalCurrencies', 'activeCurrencies', 'baseCurrency', 'lastUpdate'));
@@ -121,13 +135,21 @@ class CurrencyController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $updated = $this->currencyService->updateDatabaseRates();
-        
-        if ($updated) {
-            return redirect()->back()->with('success', 'Exchange rates updated successfully!');
-        } else {
-            return redirect()->back()->with('error', 'Failed to update exchange rates.');
+        $request->validate([
+            'rates' => 'required|array',
+            'rates.*.code' => 'required|string|size:3',
+            'rates.*.rate' => 'required|numeric|min:0'
+        ]);
+
+        foreach ($request->rates as $rateData) {
+            Currency::where('code', $rateData['code'])
+                   ->update([
+                       'rate_to_usd' => $rateData['rate'],
+                       'last_updated' => now()
+                   ]);
         }
+
+        return redirect()->back()->with('success', 'Exchange rates updated successfully.');
     }
 
     /**
@@ -141,14 +163,15 @@ class CurrencyController extends Controller
 
         $currency->update(['is_active' => !$currency->is_active]);
         
-        $status = $currency->is_active ? 'activated' : 'deactivated';
-        return redirect()->back()->with('success', "Currency {$currency->name} has been {$status}.");
+        return redirect()->back()->with('success', 
+            "Currency {$currency->name} " . ($currency->is_active ? 'activated' : 'deactivated') . " successfully."
+        );
     }
 
     /**
      * Handle AJAX currency conversion for payment forms
      */
-    public function ajaxConvert(Request $request)
+    public function ajaxConvert(Request $request): JsonResponse
     {
         $request->validate([
             'amount' => 'required|numeric|min:0',
@@ -156,29 +179,39 @@ class CurrencyController extends Controller
             'to' => 'required|string|size:3'
         ]);
 
-        try {
-            $conversion = $this->currencyService->convert(
-                $request->amount,
-                $request->from,
-                $request->to
-            );
+        $fromCurrency = Currency::where('code', strtoupper($request->from))->first();
+        $toCurrency = Currency::where('code', strtoupper($request->to))->first();
 
-            if ($conversion) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $conversion
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Currency conversion failed'
-                ], 400);
-            }
-        } catch (\Exception $e) {
+        if (!$fromCurrency || !$toCurrency) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred during conversion'
-            ], 500);
+                'message' => 'Currency not found'
+            ], 400);
         }
+
+        // Simple conversion using static rates via USD
+        $amount = $request->amount;
+        $convertedAmount = $amount;
+        $exchangeRate = 1;
+
+        if ($request->from !== $request->to) {
+            // Convert to USD first, then to target currency
+            $usdAmount = $amount / $fromCurrency->rate_to_usd;
+            $convertedAmount = $usdAmount * $toCurrency->rate_to_usd;
+            $exchangeRate = $convertedAmount / $amount;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'original_amount' => $amount,
+                'converted_amount' => round($convertedAmount, 2),
+                'exchange_rate' => round($exchangeRate, 6),
+                'from_currency' => strtoupper($request->from),
+                'to_currency' => strtoupper($request->to),
+                'from_symbol' => $fromCurrency->symbol,
+                'to_symbol' => $toCurrency->symbol
+            ]
+        ]);
     }
 }
