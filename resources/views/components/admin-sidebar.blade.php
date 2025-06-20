@@ -57,6 +57,7 @@
         </div>
 
         <!-- Financial Management -->
+        <!-- 
         <div class="pt-6">
             <div class="flex items-center px-4 mb-3">
                 <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Finance</span>
@@ -70,6 +71,7 @@
                 <span class="font-medium">Financial Management</span>
             </a>
         </div>
+        -->
 
         <!-- Content Management -->
         <div class="pt-6">

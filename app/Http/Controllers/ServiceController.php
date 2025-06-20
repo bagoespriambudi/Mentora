@@ -33,20 +33,20 @@ class ServiceController extends Controller
 
     public function create()
     {
-        // Inline role check
-        if (auth()->user()->role !== 'tutor') {
-            abort(403, 'Only tutors can create services.');
+        if (!auth()->check() || auth()->user()->role !== 'tutor') {
+            return view('services.create', [
+                'categories' => [],
+                'error' => 'Only tutors can access this page.'
+            ]);
         }
-
         $categories = Category::where('is_active', true)->get();
         return view('services.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        // Inline role check
-        if (auth()->user()->role !== 'tutor') {
-            abort(403, 'Only tutors can create services.');
+        if (!auth()->check() || auth()->user()->role !== 'tutor') {
+            return redirect()->route('services.create')->with('error', 'Only tutors can create services.');
         }
 
         $validated = $request->validate([
@@ -77,8 +77,7 @@ class ServiceController extends Controller
 
         Service::create($validated);
 
-        return redirect()->route('services.manage')
-            ->with('success', 'Service created successfully!');
+        return redirect('/sessions/create')->with('success', 'Service created successfully!');
     }
 
     public function edit(Service $service)

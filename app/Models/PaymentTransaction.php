@@ -13,6 +13,7 @@ class PaymentTransaction extends Model
         'user_id',
         'tutor_id',
         'session_id',
+        'order_id',
         'amount',
         'payment_method',
         'status',
@@ -38,6 +39,11 @@ class PaymentTransaction extends Model
     public function session()
     {
         return $this->belongsTo(Session::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 
     public function refundRequest()

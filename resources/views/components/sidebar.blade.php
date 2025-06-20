@@ -47,15 +47,6 @@
                     </div>
                     <span class="font-medium">Find Services</span>
                 </a>
-                <!-- Sessions for tutees -->
-                <a href="#" class="group flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-700/50 hover:text-white">
-                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-slate-700/50 group-hover:bg-slate-600/50">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zm0 2h4v2H8V4z"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium">Browse Sessions</span>
-                </a>
             @endif
         </div>
 

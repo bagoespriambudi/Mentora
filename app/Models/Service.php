@@ -43,4 +43,9 @@ class Service extends Model
     {
         return $this->hasMany(Project::class);
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -11,10 +11,10 @@ class SessionController extends Controller
 {
     public function index()
     {
-        // List all sessions for the current tutor
+        // List all sessions for the current tutor from the services table
         if (auth()->user()->role !== 'tutor') abort(403);
-        $sessions = Session::where('tutor_id', auth()->id())->latest()->paginate(10);
-        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        $sessions = \App\Models\Service::where('tutor_id', auth()->id())->latest()->paginate(10);
+        $categories = \App\Models\Category::where('is_active', true)->orderBy('name')->get();
         return view('sessions.manage', compact('sessions', 'categories'));
     }
 
@@ -32,8 +32,6 @@ class SessionController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
             'is_published' => 'boolean',
         ]);
         $validated['tutor_id'] = auth()->id();
@@ -56,9 +54,7 @@ class SessionController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'is_published' => 'boolean',
+            'is_published' => 'boolean'
         ]);
         $session->update($validated);
         return redirect()->route('sessions.manage')->with('success', 'Session updated successfully!');

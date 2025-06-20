@@ -32,4 +32,34 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'client_id');
     }
+
+    // Add relationship to payments
+    public function payments()
+    {
+        return $this->hasMany(PaymentTransaction::class, 'order_id');
+    }
+
+    // Get the latest payment for this order
+    public function latestPayment()
+    {
+        return $this->hasOne(PaymentTransaction::class, 'order_id')->latest();
+    }
+
+    // Check if order is paid
+    public function isPaid()
+    {
+        return $this->payments()->where('status', 'completed')->exists();
+    }
+
+    // Get total paid amount
+    public function getTotalPaidAmount()
+    {
+        return $this->payments()->where('status', 'completed')->sum('amount');
+    }
+
+    // Check if order has pending payment
+    public function hasPendingPayment()
+    {
+        return $this->payments()->where('status', 'pending')->exists();
+    }
 }

@@ -1,200 +1,227 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Create Order') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Back Button -->
-        <div class="mb-6">
-            <a href="{{ url()->previous() }}" 
-               class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium transition-colors duration-200">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Back to Services
-            </a>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <!-- Header Section -->
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-12 text-white relative overflow-hidden">
-                <!-- Background Pattern -->
-                <div class="absolute inset-0 opacity-10">
-                    <svg class="w-full h-full" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)"/>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Back Navigation -->
+            <div class="mb-6">
+                <a href="{{ route('services.show', $service) }}" 
+                   class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
-                </div>
-                
-                <div class="relative">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-3xl font-bold mb-2">Place Your Order</h1>
-                            <p class="text-indigo-100 text-lg">Complete your service booking</p>
-                        </div>
-                    </div>
-                </div>
+                    Back to Service
+                </a>
             </div>
 
-            <!-- Service Details Section -->
-            <div class="px-8 py-6 bg-gray-50 border-b">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $service->title }}</h2>
-                        @if(isset($service->description))
-                            <p class="text-gray-600 mb-4">{{ $service->description }}</p>
-                        @endif
-                        
-                        <!-- Service Features/Benefits -->
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">✓ Professional Service</span>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">✓ Fast Delivery</span>
-                            <span class="px-3 py-1 bg-purple-100 text-purple-800 text-sm font-medium rounded-full">✓ Quality Guaranteed</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Price Display -->
-                    <div class="ml-6 text-right">
-                        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-                            <div class="text-sm text-gray-500 mb-1">Service Price</div>
-                            <div class="text-3xl font-bold text-gray-900">
-                                Rp{{ number_format($service->price, 0, ',', '.') }}
-                            </div>
-                            <div class="text-sm text-gray-500 mt-1">per service</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Order Details</h3>
 
-            <!-- Order Form -->
-            <div class="px-8 py-8">
-                <form method="POST" action="{{ route('orders.store', $service) }}" class="space-y-6">
-                    @csrf
-                    
-                    <!-- Notes Section -->
-                    <div class="space-y-4">
-                        <div>
-                            <label for="notes" class="block text-lg font-semibold text-gray-900 mb-2">
-                                Additional Notes
-                                <span class="text-sm font-normal text-gray-500">(Optional)</span>
-                            </label>
-                            <p class="text-sm text-gray-600 mb-3">
-                                Please provide any specific requirements or instructions for your service order.
-                            </p>
-                            <div class="relative">
-                                <textarea 
-                                    id="notes"
-                                    name="notes" 
-                                    rows="4"
-                                    placeholder="Example: Please complete the work by Friday afternoon, or any specific requirements you have..."
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 resize-none"
-                                ></textarea>
-                                <div class="absolute bottom-3 right-3 text-xs text-gray-400">
-                                    <span id="charCount">0</span>/500
+                            @if(session('error'))
+                                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                                    {{ session('error') }}
                                 </div>
-                            </div>
+                            @endif
+
+                            <form action="{{ route('orders.store', $service) }}" method="POST" class="space-y-6">
+                                @csrf
+
+                                <!-- Service Information Display -->
+                                <div class="bg-gray-50 rounded-lg p-6">
+                                    <h4 class="text-md font-semibold text-gray-900 mb-4">Service Information</h4>
+                                    
+                                    <div class="flex items-start space-x-4">
+                                        @if($service->thumbnail)
+                                            <img src="{{ Storage::url($service->thumbnail) }}" 
+                                                 alt="{{ $service->title }}" 
+                                                 class="w-20 h-20 object-cover rounded-lg border border-gray-200">
+                                        @endif
+                                        
+                                        <div class="flex-1">
+                                            <h5 class="text-lg font-medium text-gray-900">{{ $service->title }}</h5>
+                                            <p class="text-sm text-gray-600">{{ $service->category->name }}</p>
+                                            <p class="text-sm text-gray-500 mt-2">{{ Str::limit($service->description, 200) }}</p>
+                                            
+                                            <div class="mt-4 flex items-center space-x-4 text-sm text-gray-600">
+                                                <div class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                                    </svg>
+                                                    {{ $service->tutor->name }}
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                    {{ $service->duration_days }} days delivery
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                                    </svg>
+                                                    Rp {{ number_format($service->price, 0, ',', '.') }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Notes -->
+                                <div>
+                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Additional Notes (Optional)
+                                    </label>
+                                    <textarea id="notes" 
+                                              name="notes" 
+                                              rows="4" 
+                                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                              placeholder="Any specific requirements or instructions for the tutor...">{{ old('notes') }}</textarea>
+                                    @error('notes')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-2 text-sm text-gray-500">
+                                        Let the tutor know about any specific requirements, deadlines, or preferences you have for this service.
+                                    </p>
+                                </div>
+
+                                <!-- Terms and Conditions -->
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-blue-800">Order Information</h3>
+                                            <div class="mt-2 text-sm text-blue-700">
+                                                <ul class="list-disc list-inside space-y-1">
+                                                    <li>Your order will be pending until the tutor approves it</li>
+                                                    <li>You can edit or cancel your order while it's in pending status</li>
+                                                    <li>Payment will be required after the tutor approves your order</li>
+                                                    <li>The tutor will begin work after payment confirmation</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Buttons -->
+                                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                                    <a href="{{ route('services.show', $service) }}" 
+                                       class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" 
+                                            class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                                        </svg>
+                                        Place Order
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
+                </div>
 
+                <!-- Sidebar -->
+                <div class="space-y-6">
                     <!-- Order Summary -->
-                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                            </svg>
-                            Order Summary
-                        </h3>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center py-2">
-                                <span class="text-gray-600">Service</span>
-                                <span class="font-medium text-gray-900">{{ $service->title }}</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2">
-                                <span class="text-gray-600">Quantity</span>
-                                <span class="font-medium text-gray-900">1x</span>
-                            </div>
-                            <div class="border-t border-gray-300 pt-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xl font-semibold text-gray-900">Total Amount</span>
-                                    <span class="text-2xl font-bold text-indigo-600">
-                                        Rp{{ number_format($service->price, 0, ',', '.') }}
-                                    </span>
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg sticky top-8">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
+                            
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Service</span>
+                                    <span class="text-sm font-medium text-gray-900">{{ $service->title }}</span>
                                 </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Category</span>
+                                    <span class="text-sm text-gray-900">{{ $service->category->name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Tutor</span>
+                                    <span class="text-sm text-gray-900">{{ $service->tutor->name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Delivery Time</span>
+                                    <span class="text-sm text-gray-900">{{ $service->duration_days }} days</span>
+                                </div>
+                                <div class="border-t border-gray-200 pt-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-base font-medium text-gray-900">Total Price</span>
+                                        <span class="text-lg font-bold text-gray-900">Rp {{ number_format($service->price, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 text-xs text-gray-500">
+                                <p class="mb-2">
+                                    <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    No hidden fees
+                                </p>
+                                <p class="mb-2">
+                                    <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Edit/cancel before approval
+                                </p>
+                                <p>
+                                    <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Pay only after approval
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4 pt-6">
-                        <button 
-                            type="button"
-                            onclick="window.history.back()"
-                            class="flex-1 px-6 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                            Cancel
-                        </button>
-                        
-                        <button 
-                            type="submit"
-                            class="flex-1 px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zM8 6a2 2 0 114 0v1H8V6zm0 3a1 1 0 012 0 1 1 0 11-2 0zm4 0a1 1 0 012 0 1 1 0 11-2 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Place Order
-                        </button>
-                    </div>
+                    <!-- Tutor Information -->
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Tutor Information</h3>
+                            
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">{{ $service->tutor->name }}</p>
+                                    <p class="text-xs text-gray-500">Professional Tutor</p>
+                                </div>
+                            </div>
 
-                    <!-- Security Notice -->
-                    <div class="flex items-center justify-center pt-4 text-sm text-gray-500">
-                        <svg class="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        Your order is secured with SSL encryption
+                            <div class="text-sm text-gray-600 space-y-2">
+                                <p>Specializes in {{ $service->category->name }}</p>
+                                <p>Average delivery: {{ $service->duration_days }} days</p>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                <a href="{{ route('services.show', $service) }}" 
+                                   class="text-sm text-blue-600 hover:text-blue-900">
+                                    View full service details →
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const textarea = document.getElementById('notes');
-    const charCount = document.getElementById('charCount');
-    const maxLength = 500;
-    
-    textarea.addEventListener('input', function() {
-        const currentLength = this.value.length;
-        charCount.textContent = currentLength;
-        
-        if (currentLength > maxLength * 0.8) {
-            charCount.style.color = '#f59e0b'; // yellow
-        }
-        if (currentLength > maxLength * 0.9) {
-            charCount.style.color = '#ef4444'; // red
-        }
-        if (currentLength <= maxLength * 0.8) {
-            charCount.style.color = '#9ca3af'; // gray
-        }
-    });
-    
-    // Prevent form submission if textarea exceeds limit
-    textarea.addEventListener('keydown', function(e) {
-        if (this.value.length >= maxLength && !['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-            e.preventDefault();
-        }
-    });
-});
-</script>
-@endsection
+</x-app-layout>

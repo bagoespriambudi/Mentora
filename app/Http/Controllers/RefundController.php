@@ -45,7 +45,7 @@ class RefundController extends Controller
             $refund->transaction->update(['status' => 'refunded']);
         });
 
-        return redirect()->route('admin.financial.index')
+        return redirect()->route('admin.dashboard')
             ->with('success', 'Refund request approved.');
     }
 
@@ -62,7 +62,7 @@ class RefundController extends Controller
             'admin_notes' => $validated['admin_notes']
         ]);
 
-        return redirect()->route('admin.financial.index')
+        return redirect()->route('admin.dashboard')
             ->with('success', 'Refund request rejected.');
     }
 }

@@ -47,8 +47,8 @@
                             id="role"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             required>
-                        <option value="client" {{ old('role', $user->role) === 'client' ? 'selected' : '' }}>Client</option>
-                        <option value="freelancer" {{ old('role', $user->role) === 'freelancer' ? 'selected' : '' }}>Freelancer</option>
+                        <option value="tutee" {{ old('role', $user->role) === 'tutee' ? 'selected' : '' }}>Tutee</option>
+                        <option value="tutor" {{ old('role', $user->role) === 'tutor' ? 'selected' : '' }}>Tutor</option>
                         <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
                     </select>
                     @error('role')

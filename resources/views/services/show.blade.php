@@ -33,7 +33,7 @@
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                         </svg>
-                                        By {{ $service->user->name }}
+                                        By {{ $service->tutor->name }}
                                     </div>
                                     <div class="flex items-center">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +164,7 @@
                                         Order Now
                                     </a>
                                 </div>
-                            @elseif(auth()->user()->role === 'tutor' && $service->user_id === auth()->id())
+                            @elseif(auth()->user()->role === 'tutor' && $service->tutor_id === auth()->id())
                                 <!-- Tutor can edit their own service -->
                                 <div class="text-center">
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Session</h3>
@@ -183,7 +183,7 @@
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Unavailable</h3>
                                     <p class="text-sm text-gray-600">This session is currently not available for ordering.</p>
                                 </div>
-                            @elseif(auth()->user()->role === 'tutor' && $service->user_id !== auth()->id())
+                            @elseif(auth()->user()->role === 'tutor' && $service->tutor_id !== auth()->id())
                                 <!-- Tutor viewing other tutor's service -->
                                 <div class="text-center">
                                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Session Info</h3>
@@ -224,8 +224,8 @@
                                 </div>
                             </div>
                             <div class="flex-grow">
-                                <h4 class="text-base font-medium text-gray-900">{{ $service->user->name }}</h4>
-                                <p class="text-sm text-gray-600">Member since {{ $service->user->created_at->format('M Y') }}</p>
+                                <h4 class="text-base font-medium text-gray-900">{{ $service->tutor->name }}</h4>
+                                <p class="text-sm text-gray-600">Member since {{ $service->tutor->created_at->format('M Y') }}</p>
                                 
                                 <div class="mt-4 space-y-2">
                                     <div class="flex items-center text-sm text-gray-600">

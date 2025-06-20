@@ -20,7 +20,7 @@
                             <td class="px-6 py-4">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                     {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' :
-                                       ($user->role === 'freelancer' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
+                                       ($user->role === 'tutor' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
                                     {{ ucfirst($user->role) }}
                                 </span>
                             </td>

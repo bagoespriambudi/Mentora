@@ -14,13 +14,27 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\SessionController;
 use App\Models\Content;
+use App\Http\Controllers\OrderController;
 
 // Guest landing page
 Route::get('/', function () {
     $contents = Content::where('is_active', true)->latest()->take(6)->get();
-    return auth()->check()
-        ? redirect()->route('dashboard')
-        : view('welcome', compact('contents'));
+    
+    if (auth()->check()) {
+        $user = auth()->user();
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'tutor':
+                return redirect()->route('tutor.dashboard');
+            case 'tutee':
+                return redirect()->route('dashboard');
+            default:
+                return redirect()->route('dashboard');
+        }
+    }
+    
+    return view('welcome', compact('contents'));
 })->name('welcome');
 
 // Authentication Routes
@@ -42,6 +56,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
     Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
     Route::post('/payments/{payment}/cancel', [PaymentController::class, 'cancel'])->name('payments.cancel');
+
+    // Order-based Payment Routes
+    Route::get('/payments/create/order/{order}', [PaymentController::class, 'createFromOrder'])->name('payments.create.order');
+    Route::post('/payments/store/order/{order}', [PaymentController::class, 'storeFromOrder'])->name('payments.store.order');
 
     // Refund Routes
     Route::get('/payments/{payment}/refund', [RefundController::class, 'create'])->name('refunds.create');
@@ -67,6 +85,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/sessions/{session}/edit', [SessionController::class, 'edit'])->name('sessions.edit');
     Route::put('/sessions/{session}', [SessionController::class, 'update'])->name('sessions.update');
     Route::delete('/sessions/{session}', [SessionController::class, 'destroy'])->name('sessions.destroy');
+
+    // Tutee Orders
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create/{service}', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders/{service}', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/edit', [\App\Http\Controllers\OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy');
 });
 
 // Public Content Routes (accessible to all)
@@ -78,7 +105,9 @@ Route::post('/contents/{content}/report', [ContentController::class, 'reportSubm
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
-    // Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show', 'create', 'store']);
+    
+    // Admin User Management Routes
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['show', 'create', 'store']);
 
     // Admin Category Routes
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -89,10 +118,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-    // Admin Financial Routes
-    // Route::get('/financial', [FinancialController::class, 'index'])->name('financial.index');
-    // Route::post('/financial/report', [FinancialController::class, 'generateReport'])->name('financial.report');
-    // Route::get('/financial/report/{report}/export', [FinancialController::class, 'exportReport'])->name('financial.export');
+    // Admin Financial Routes (commented out until views are created)
+    // Route::get('/financial', [App\Http\Controllers\Admin\FinancialController::class, 'index'])->name('financial.index');
+    // Route::post('/financial/report', [App\Http\Controllers\Admin\FinancialController::class, 'generateReport'])->name('financial.report');
+    // Route::get('/financial/report/{report}/export', [App\Http\Controllers\Admin\FinancialController::class, 'exportReport'])->name('financial.export');
     
     // Refund Management
     Route::post('/refunds/{refund}/approve', [RefundController::class, 'approve'])->name('refunds.approve');

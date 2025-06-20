@@ -7,7 +7,7 @@ if (auth()->check() && auth()->user()->role === 'tutor') {
     $navigation['My Sessions'] = route('sessions.manage');
 }
 if (auth()->check() && auth()->user()->role === 'tutee') {
-    $navigation['My Bookings'] = route('tutee.sessions');
+    $navigation['My Bookings'] = route('orders.index');
 }
 if (auth()->check() && auth()->user()->role === 'admin') {
     $navigation['Admin Dashboard'] = route('admin.dashboard');
